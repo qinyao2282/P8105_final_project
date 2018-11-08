@@ -1,0 +1,28 @@
+proposal
+================
+Qinyao Wu
+11/8/2018
+
+-   The group members (names and UNIs)
+
+Qinyao Wu (qw2282) Haowei Ni (hn2339) Jiabei Wang (jw3726) Bihui Sun (bs3134) Shuo Yan (sy2825)
+
+-   The tentative project title
+
+Factors Associated With Heart Disease Mortality
+
+-   The motivation for this project
+
+Since heart disease is one of the leading cause of death in US, we would like to characterize the demographic information and try to find the underlying patterns.
+
+-   The intended final products
+
+In the end we will make a organized report including all the details regarding to our project. We will also make a webpage that can summarize and give an overview of our report. The project-related screencast will also be made and embed into our website. The report would include sections of introduction, data information, data analysis, and conclusion which describes the overall distribution of heart diseases.
+
+-   The anticipated data sources
+
+The data we are going to analyze for this project is posted on catalog.data.gov and is collected by National Vital Statistics System. The planned analyses / visualizations / coding challenges We will first tidy the data based on the age groups and races. the Since we plan to analyze the geographical information of heart disease mortality, we would like to make a map according to the distributions of heart diseases. We also plan to make plots about the comparison according to gender and race.
+
+-   The planned timeline
+
+Nov 12-16 Tidy the data Nov 16 - Nov 26 Make plots and visualize the data Nov 26 - Dec 6 Webpage and screencast
