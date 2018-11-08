@@ -1,6 +1,5 @@
 proposal
 ================
-Qinyao Wu
 11/8/2018
 
 -   The group members (names and UNIs)
@@ -25,4 +24,8 @@ The data we are going to analyze for this project is posted on catalog.data.gov 
 
 -   The planned timeline
 
-Nov 12-16 Tidy the data Nov 16 - Nov 26 Make plots and visualize the data Nov 26 - Dec 6 Webpage and screencast
+Nov 12-16 Tidy the data
+
+Nov 16 - Nov 26 Make plots and visualize the data
+
+Nov 26 - Dec 6 Webpage and screencast

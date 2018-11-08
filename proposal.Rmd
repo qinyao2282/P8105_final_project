@@ -1,6 +1,5 @@
 ---
 title: "proposal"
-author: "Qinyao Wu"
 date: "11/8/2018"
 output: github_document
 ---
@@ -35,7 +34,9 @@ We will first tidy the data based on the age groups and races. the Since we plan
 * The planned timeline
 
 Nov 12-16 Tidy the data 
+
 Nov 16 - Nov 26 Make plots and visualize the data 
+
 Nov 26 - Dec 6 Webpage and screencast 
 
 
