@@ -1,0 +1,18 @@
+---
+title: "Data_source"
+author: "Haowei Ni"
+date: "2018/11/19"
+output: gitbub_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Read original data 
+
+```{r}
+library(readr)
+Heart_Disease_Mortality_Data_Among_US_Adults_35_by_State_Territory_and_County <- read_csv("data /Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv")
+```
+
