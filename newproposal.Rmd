@@ -10,9 +10,37 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Intended Final Product
 #### Part I Background and Introduction 
-Background check of the # of heart diseases distribution for year 2015:
+Background check of other variable of heart diseases distribution for year 2015:
 * Add the average income and air quality value to each state or city. 
 
-* Graph : a histogram that indicate the number of heart diseases compared with different states. 
+#### Part II Core Analysis (focus on data science field)
 
+##### Geographical Visualization
 
+* Graph (a bubble map) : Which regions are in has the highest # of heart disease? 
+
+* Relate it to the income and air quality and do Multiple linear regression. 
+
+##### Demographic Visualization
+* Graph: A histogram that indicate which race of people has the highest mortality rate?
+
+* Compare race with age and gender. 
+
+* Comment on this 
+
+##### Descriptive Part (Table or Graph)
+* Degree preference and major preference?
+
+* Degree preference and major preference?
+
+* What programming / statistical tools are most required?
+
+* What kinds of data science skills are most in need? (data analysis, machine learning, data visualization, etc.)
+
+* Comparisons among job titles -- Data Engineer vs. Data Scientist vs. Data Analyst:   
+  1)Degree and majors  
+  2)Required tools  
+  3)Required skills  
+  4)Years of experiences  
+  
+* Comparison of requirements between 500 largest industrial corporations in U.S. and other companies.
