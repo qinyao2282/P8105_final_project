@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 #### Part I Background and Introduction 
 Background check of other variable of heart diseases distribution for year 2015:
 * Add the average income and air quality value to each state or city. 
+* Add smoking prevalence 
 
 #### Part II Core Analysis (focus on data science field)
 
