@@ -9,10 +9,24 @@ output: gitbub_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+library(tidyverse)
+library(dplyr)
+library(stringr)
+library(readr)
+```
+
 Read original data 
 
 ```{r}
 library(readr)
-Heart_Disease_Mortality_Data_Among_US_Adults_35_by_State_Territory_and_County <- read_csv("data /Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv")
+Heart_Disease =  read_csv("data /Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv")
+```
+
+Add air quality data 
+
+```{r}
+library(readr)
+airquality_2015 = read_csv("data /airquality.csv") 
 ```
 
