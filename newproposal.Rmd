@@ -1,0 +1,18 @@
+---
+title: "New Proposal"
+date: "2018/11/19"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Intended Final Product
+#### Part I Background and Introduction 
+Background check of the # of heart diseases distribution for year 2015:
+* Add the average income and air quality value to each state or city. 
+
+* Graph : a histogram that indicate the number of heart diseases compared with different states. 
+
+
