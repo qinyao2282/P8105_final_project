@@ -28,9 +28,8 @@ Add air quality data
 ```{r}
 library(readr)
 airquality_2015 = read_csv("data /airquality.csv") 
+airquality = 
+  airquality_2015 %>% 
+  select(State, County, PM2.5)
 ```
-Add obesity data
 
-```{r add_obesity_data}
-obesity_data = read_csv("data/National_Obesity_By_State.csv")
-```
