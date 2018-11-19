@@ -29,4 +29,8 @@ Add air quality data
 library(readr)
 airquality_2015 = read_csv("data /airquality.csv") 
 ```
+Add obesity data
 
+```{r add_obesity_data}
+obesity_data = read_csv("data/National_Obesity_By_State.csv")
+```
