@@ -31,8 +31,9 @@ Read original data
 heart_disease =  read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
+
   mutate(state = state.name[match(state, state.abb)]) %>% 
-  select(-data_source, -geographic_level, -class, -topic, -data_value_footnote, -data_value_footnote_symbol, -topic_id, -stratification2, -location_id, -stratification1 )
+  select(-data_source, -geographic_level, -class, -topic, -data_value_footnote, -data_value_footnote_symbol, -topic_id, -stratification2, -location_id, -stratification1 ) 
 ```
 
     ## Parsed with column specification:
@@ -124,6 +125,10 @@ stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_Stat
   rename(stroke_value=data_value)%>%
   rename(state = location_abbr) %>%
   mutate(state = state.name[match(state, state.abb)])%>%
+
+  select(state,stroke_value) %>% 
+  group_by(state) %>% 
+  summarize(stroke_value = sum(stroke_value)) %>% 
   select(state,stroke_value)
 ```
 
@@ -150,48 +155,6 @@ stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_Stat
     ##   `Location 1` = col_character()
     ## )
 
-``` r
-stroke_data
-```
-
-    ## # A tibble: 59,076 x 2
-    ##    state  stroke_value
-    ##    <chr>         <dbl>
-    ##  1 Alaska          3  
-    ##  2 Alaska          6.1
-    ##  3 Alaska         63.8
-    ##  4 Alaska        106. 
-    ##  5 Alaska         NA  
-    ##  6 Alaska         63.4
-    ##  7 Alaska         81.4
-    ##  8 Alaska         65.9
-    ##  9 Alaska         52.3
-    ## 10 Alaska         52.3
-    ## # ... with 59,066 more rows
-
-``` r
-left_join(heart_disease,stroke_data)
-```
-
-    ## Joining, by = "state"
-
-    ## # A tibble: 102,985,344 x 10
-    ##     year state location_desc data_value data_value_unit data_value_type
-    ##    <int> <chr> <chr>              <dbl> <chr>           <chr>          
-    ##  1  2015 Alas… Aleutians Ea…       110. per 100,000 po… Age-adjusted, …
-    ##  2  2015 Alas… Aleutians Ea…       110. per 100,000 po… Age-adjusted, …
-    ##  3  2015 Alas… Aleutians Ea…       110. per 100,000 po… Age-adjusted, …
-    ##  4  2015 Alas… Aleutians Ea…       110. per 100,000 po… Age-adjusted, …
-    ##  5  2015 Alas… Aleutians Ea…       110. per 100,000 po… Age-adjusted, …
-    ##  6  2015 Alas… Aleutians Ea…       110. per 100,000 po… Age-adjusted, …
-    ##  7  2015 Alas… Aleutians Ea…       110. per 100,000 po… Age-adjusted, …
-    ##  8  2015 Alas… Aleutians Ea…       110. per 100,000 po… Age-adjusted, …
-    ##  9  2015 Alas… Aleutians Ea…       110. per 100,000 po… Age-adjusted, …
-    ## 10  2015 Alas… Aleutians Ea…       110. per 100,000 po… Age-adjusted, …
-    ## # ... with 102,985,334 more rows, and 4 more variables:
-    ## #   stratification_category1 <chr>, stratification_category2 <chr>,
-    ## #   location_1 <chr>, stroke_value <dbl>
-
 Add income
 
 ``` r
@@ -203,15 +166,18 @@ data_with_income = left_join(heart_disease,income_data, by = "state")
 
 ``` r
 data_income_obesity = left_join(income_data,data_with_obesity, by = "state")
-```
 
-``` r
+
 smoking_data = read_csv("data/smoking.csv") %>% 
   filter(YEAR == "2015-2016") %>% 
   mutate(year = 2015) %>% 
   rename(state = LocationDesc) %>% 
   select(-YEAR) %>% 
-  select(year, state, Data_Value)
+
+  select(year, state, Data_Value) %>% 
+
+  select(year, state, Data_Value) %>% 
+  rename(tobacco_comsumption = Data_Value)
 ```
 
     ## Parsed with column specification:
@@ -234,6 +200,10 @@ data_income_obesity_smoking_air = left_join(airquality_2015, data_income_obesity
 
 
 
+
 data_income_obesity_smoking = left_join(smoking_data, data_income_obesity, by = "state")
 data_income_obesity_smoking_air = left_join(airquality_2015, data_income_obesity_smoking, by = "state")
+
+
+final_data = left_join(stroke_data, data_income_obesity_smoking_air, by = "state")
 ```
