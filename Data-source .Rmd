@@ -56,6 +56,7 @@ data_with_obesity = left_join(heart_disease, obesity_data)
 
 Add stroke data
 
+```{r stroke_data}
 library(tidyverse)
 library(data.table)
 stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
