@@ -37,10 +37,10 @@ Add obesity data
 
 ```{r add_obesity_data}
 
-obesity_data = read_csv("data/National_Obesity_By_State.csv") %>%
+obesity_data = read_csv("./data/National_Obesity_By_State.csv") %>%
   janitor::clean_names() %>%
-  rename(location = state) %>%
-  rename(obesity = obesity_percentage) %>%
+  rename(state = name) %>%
+  rename(obesity_percentage = obesity) %>%
   select(state, obesity_percentage)
   
 ```
