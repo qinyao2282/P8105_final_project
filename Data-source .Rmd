@@ -97,10 +97,6 @@ smoking_data = read_csv("data/smoking.csv") %>%
   rename(tobacco_comsumption = Data_Value)
 
 
-data_income_obesity_smoking = left_join(smoking_data, data_income_obesity, by = "state")
-
-data_income_obesity_smoking_air = left_join(airquality_2015, data_income_obesity_smoking, by = "state")
-
 
 
 
