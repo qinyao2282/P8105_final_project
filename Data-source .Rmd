@@ -2,7 +2,7 @@
 title: "Data_source"
 author: "Haowei Ni"
 date: "2018/11/19"
-output: gitbub_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -33,3 +33,14 @@ airquality =
   select(State, County, PM2.5)
 ```
 
+Add obesity data
+
+```{r add_obesity_data}
+
+obesity_data = read_csv("data/National_Obesity_By_State.csv") %>%
+  janitor::clean_names() %>%
+  rename(location = state) %>%
+  rename(obesity = obesity_percentage) %>%
+  select(state, obesity_percentage)
+  
+```
