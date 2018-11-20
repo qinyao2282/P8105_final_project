@@ -19,24 +19,26 @@ library(readxl)
 
 Read original data 
 
-```{r}
-library(readr)
-Heart_Disease =  read_csv("data /Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv")
+```{r input_heart_disease_data}
 
+heart_disease =  read_csv("./data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  mutate(state = state.name[match(heart_disease$state, state.abb)])
 ```
 
 Add air quality data 
 
 ```{r}
 library(readr)
-airquality_2015 = read_csv("data /airquality.csv") 
-airquality = 
-  airquality_2015 %>% 
+airquality_2015 = read_csv("data /airquality.csv") %>%
+  janitor::clean_names() %>%
   select(State, County, PM2.5)
- Heart = left_join(airquality, Heart_Disease) 
-inner_join(airquality, Heart_Disease)  
-anti_join(airquality, Heart_Disease) 
-anti_join(airquality, Heart_Disease)
+  
+heart_data = left_join(airquality, heart_disease) 
+inner_join(airquality, heart_disease)  
+anti_join(airquality, heart_disease) 
+anti_join(airquality, heart_disease)
 ```
 
 Add obesity data
@@ -47,8 +49,9 @@ obesity_data = read_csv("./data/National_Obesity_By_State.csv") %>%
   janitor::clean_names() %>%
   rename(state = name) %>%
   rename(obesity_percentage = obesity) %>%
-  select(state, obesity_percentage)
-  
+  select(state, obesity_percentage) 
+
+left_join(heart_disease, obesity_data)
 ```
 
 Add stroke data
@@ -56,7 +59,7 @@ Add stroke data
 ```{r add_stroke_data}
 library(readr)
 stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") 
-left_join(Heart_Disease,stroke_data)
+left_join(heart_disease,stroke_data)
 
 ```
 
@@ -64,9 +67,11 @@ Add income
 
 ```{r}
 
-income_data = read_excel("data /income_2015.xlsx", range = "A3:D55") %>% 
-  rename(LocationAbbr = Locationabbr)
+income_data = read_excel("data /income_2015.xlsx", range = "A3:D55") %>%
+  janitor::clean_names() %>%
+  rename(locationabbr = state) %>%
+  mutate(state = state.name[match(income_data$state, state.abb)])
 
-data_with_income = left_join(Heart_Disease,income_data, by = "LocationAbbr")
+data_with_income = left_join(heart_disease,income_data, by = "state")
 ```
 
