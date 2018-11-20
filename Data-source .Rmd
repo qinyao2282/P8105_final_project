@@ -21,17 +21,17 @@ Read original data
 
 ```{r input_heart_disease_data}
 
-heart_disease =  read_csv("./data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+heart_disease =  read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
-  mutate(state = state.name[match(heart_disease$state, state.abb)])
+  mutate(state = state.name[match(state, state.abb)])
 ```
 
 Add air quality data 
 
 ```{r}
-library(readr)
-airquality_2015 = read_csv("data /airquality.csv") %>%
+
+airquality_2015 = read_csv("data/airquality.csv") %>%
   janitor::clean_names() %>%
   select(State, County, PM2.5)
   
@@ -45,19 +45,18 @@ Add obesity data
 
 ```{r add_obesity_data}
 
-obesity_data = read_csv("./data/National_Obesity_By_State.csv") %>%
+obesity_data = read_csv("data/National_Obesity_By_State.csv") %>%
   janitor::clean_names() %>%
   rename(state = name) %>%
   rename(obesity_percentage = obesity) %>%
   select(state, obesity_percentage) 
 
-left_join(heart_disease, obesity_data)
+data_with_obesity = left_join(heart_disease, obesity_data)
 ```
 
 Add stroke data
 
 ```{r add_stroke_data}
-library(readr)
 stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") 
 left_join(heart_disease,stroke_data)
 
@@ -67,11 +66,16 @@ Add income
 
 ```{r}
 
-income_data = read_excel("data /income_2015.xlsx", range = "A3:D55") %>%
+income_data = read_excel("data/income_2015.xlsx", range = "A4:D55") %>%
   janitor::clean_names() %>%
-  rename(locationabbr = state) %>%
-  mutate(state = state.name[match(income_data$state, state.abb)])
+  rename(state = united_states, median_income = x55117, income_standard_error = x253) 
 
 data_with_income = left_join(heart_disease,income_data, by = "state")
+```
+
+
+
+```{r}
+data_income_obesity = left_join(income_data,data_with_obesity, by = "state")
 ```
 
