@@ -56,8 +56,15 @@ data_with_obesity = left_join(heart_disease, obesity_data)
 
 Add stroke data
 
-```{r add_stroke_data}
-stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") 
+library(tidyverse)
+library(data.table)
+stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(stroke_value=data_value)%>%
+  rename(state = location_abbr) %>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  select(state,stroke_value)
+
 left_join(heart_disease,stroke_data)
 
 ```
@@ -82,7 +89,7 @@ smoking_data = read_csv("data/smoking.csv")
 ```
 
 =======
->>>>>>> 552da2d70c15a845c5a40236a7b1383c413e4ca2
+
 
 ```{r}
 data_income_obesity = left_join(income_data,data_with_obesity, by = "state")
