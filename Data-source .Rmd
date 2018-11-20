@@ -63,9 +63,8 @@ stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_Stat
 
   select(state,stroke_value) %>% 
   group_by(state) %>% 
-  summarize(stroke_value = sum(stroke_value)) %>% 
-  select(state,stroke_value)
-
+  filter(!is.na(stroke_value)) %>% 
+  summarize(stroke_value = sum(stroke_value)) 
 ```
 
 
