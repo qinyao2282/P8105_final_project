@@ -60,7 +60,7 @@ stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_Stat
   rename(state = location_abbr) %>%
   mutate(state = state.name[match(state, state.abb)])%>%
   select(state,stroke_value)
-stroke_data
+
 left_join(heart_disease,stroke_data)
 ```
 
