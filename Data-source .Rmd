@@ -33,12 +33,12 @@ Add air quality data
 
 airquality_2015 = read_csv("data/airquality.csv") %>%
   janitor::clean_names() %>%
-  select(State, County, PM2.5)
+  select(state, pm2_5)
   
-heart_data = left_join(airquality, heart_disease) 
-inner_join(airquality, heart_disease)  
-anti_join(airquality, heart_disease) 
-anti_join(airquality, heart_disease)
+heart_data = left_join(airquality_2015, heart_disease) 
+inner_join(airquality_2015, heart_disease)  
+anti_join(airquality_2015, heart_disease) 
+anti_join(airquality_2015, heart_disease)
 ```
 
 Add obesity data
