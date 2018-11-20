@@ -58,3 +58,7 @@ stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_Stat
 left_join(Heart_Disease,stroke_data)
 
 ```
+
+Add income
+
+
