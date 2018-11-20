@@ -74,12 +74,15 @@ data_with_income = left_join(heart_disease,income_data, by = "state")
 ```
 
 
+<<<<<<< HEAD
 Add smoking
 ```{r}
 smoking_data = read_csv("data/smoking.csv")
 
 ```
 
+=======
+>>>>>>> 552da2d70c15a845c5a40236a7b1383c413e4ca2
 
 ```{r}
 data_income_obesity = left_join(income_data,data_with_obesity, by = "state")
