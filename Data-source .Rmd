@@ -14,6 +14,7 @@ library(tidyverse)
 library(dplyr)
 library(stringr)
 library(readr)
+library(readxl)
 ```
 
 Read original data 
@@ -61,4 +62,11 @@ left_join(Heart_Disease,stroke_data)
 
 Add income
 
+```{r}
+
+income_data = read_excel("data /income_2015.xlsx", range = "A3:D55") %>% 
+  rename(LocationAbbr = Locationabbr)
+
+data_with_income = left_join(Heart_Disease,income_data, by = "LocationAbbr")
+```
 
