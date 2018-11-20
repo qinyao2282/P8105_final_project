@@ -31,6 +31,10 @@ airquality_2015 = read_csv("data /airquality.csv")
 airquality = 
   airquality_2015 %>% 
   select(State, County, PM2.5)
+ Heart = left_join(airquality, Heart_Disease) 
+inner_join(airquality, Heart_Disease)  
+anti_join(airquality, Heart_Disease) 
+anti_join(airquality, Heart_Disease)
 ```
 
 Add obesity data
