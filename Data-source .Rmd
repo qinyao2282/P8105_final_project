@@ -24,7 +24,8 @@ Read original data
 heart_disease =  read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
-  mutate(state = state.name[match(state, state.abb)])
+  mutate(state = state.name[match(state, state.abb)]) %>% 
+  select(-data_source, -geographic_level, -class, -topic, -data_value_footnote, -data_value_footnote_symbol, -topic_id, -stratification2, -location_id, -stratification1, )
 ```
 
 Add air quality data 
