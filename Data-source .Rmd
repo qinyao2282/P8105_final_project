@@ -50,6 +50,8 @@ obesity_data = read_csv("./data/National_Obesity_By_State.csv") %>%
   
 ```
 
+Add stroke data
+
 ```{r add_stroke_data}
 library(readr)
 stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") 
