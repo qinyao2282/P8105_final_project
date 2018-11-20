@@ -33,12 +33,10 @@ Add air quality data
 
 airquality_2015 = read_csv("data/airquality.csv") %>%
   janitor::clean_names() %>%
-  select(state, pm2_5)
-  
-heart_data = left_join(airquality_2015, heart_disease) 
-inner_join(airquality_2015, heart_disease)  
-anti_join(airquality_2015, heart_disease) 
-anti_join(airquality_2015, heart_disease)
+  select(state, pm2_5) %>% 
+  group_by(state) %>% 
+  summarize(sum(pm2_5))
+
 ```
 
 Add obesity data
@@ -90,6 +88,8 @@ smoking_data = read_csv("data/smoking.csv") %>%
   select(year, state, Data_Value)
 
 data_income_obesity_smoking = left_join(smoking_data, data_income_obesity, by = "state")
+
+data_income_obesity_smoking_air = left_join(airquality_2015, data_income_obesity_smoking, by = "state")
 
 ```
 
