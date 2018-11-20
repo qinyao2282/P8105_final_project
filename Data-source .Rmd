@@ -20,8 +20,8 @@ Read original data
 
 ```{r}
 library(readr)
-Heart_Disease =  read_csv("data /Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv")%>%
-   rename(State=LocationAbbr)
+Heart_Disease =  read_csv("data /Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv")
+
 ```
 
 Add air quality data 
@@ -48,4 +48,11 @@ obesity_data = read_csv("./data/National_Obesity_By_State.csv") %>%
   rename(obesity_percentage = obesity) %>%
   select(state, obesity_percentage)
   
+```
+
+```{r add_stroke_data}
+library(readr)
+stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") 
+left_join(Heart_Disease,stroke_data)
+
 ```
