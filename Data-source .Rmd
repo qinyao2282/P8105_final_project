@@ -20,7 +20,8 @@ Read original data
 
 ```{r}
 library(readr)
-Heart_Disease =  read_csv("data /Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv")
+Heart_Disease =  read_csv("data /Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv")%>%
+   rename(State=LocationAbbr)
 ```
 
 Add air quality data 
