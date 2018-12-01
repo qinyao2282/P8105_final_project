@@ -170,9 +170,10 @@ final_data_income %>%
   )
 
 
-lm()
+lm(mortality_rate ~ median_income, data = final_data_income) %>% 
+  summary()
 ```
-
+From the lm result, we can observe that median_income is a very significant variable with a p value of 1.3e-08. This indicates there is a strong association between income and heart disease mortality rate. 
 
 ```{r}
 
