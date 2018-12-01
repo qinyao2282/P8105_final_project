@@ -21,7 +21,7 @@ library(readxl)
 Read original data 
 
 ```{r input_heart_disease_data}
-heart_disease =  read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+heart_disease_stratify =  read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
   rename(mortality_rate = data_value) %>%
@@ -29,7 +29,18 @@ heart_disease =  read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35
   mutate(state = state.name[match(state, state.abb)]) %>% 
   select(-data_source, -geographic_level, -class, -topic, -data_value_footnote, -data_value_footnote_symbol, -topic_id, -location_id ) 
 
+heart_disease = heart_disease_stratify %>% 
+  filter(stratification1 == "Overall", stratification2 == "Overall") %>% 
+  select(-stratification1, -stratification2, -stratification_category1, -stratification_category2) 
 
+heart_disease$mortality_rate[is.na(heart_disease$mortality_rate)] = 0
+
+heart_disease = 
+heart_disease %>% 
+  group_by(state) %>% 
+  summarise(mortality_rate = mean(mortality_rate))
+  
+  
 ```
 
 Add air quality data 
@@ -95,7 +106,9 @@ smoking_data = read_csv("data/smoking.csv") %>%
   select(year, state, Data_Value) %>% 
 
   select(year, state, Data_Value) %>% 
-  rename(tobacco_comsumption = Data_Value)
+  rename(tobacco_comsumption = Data_Value) %>% 
+  group_by(state) %>% 
+  summarise(tobacco_consumption = sum(tobacco_comsumption))
 
 
 data_income_obesity_smoking = left_join(smoking_data, data_income_obesity, by = "state")
@@ -113,8 +126,6 @@ final_data = left_join(stroke_data, data_income_obesity_smoking_air, by = "state
   select(-us, -year.x) %>% 
   select(year.y, everything())
 
-overall_data = final_data %>% 
-  filter(stratification1 == "Overall", stratification2 == "Overall")
 
 
   
