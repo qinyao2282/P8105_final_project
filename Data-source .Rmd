@@ -150,6 +150,9 @@ final_data_income %>%
     x = "Mortality Rate",
     y = "median_income"
   )
+
+
+lm()
 ```
 
 
