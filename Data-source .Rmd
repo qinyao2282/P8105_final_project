@@ -172,9 +172,10 @@ final_data_income %>%
 lm()
 ```
 
+Find the association between airquality and heart disease mortality
 
 ```{r}
-
+## make scatterplot 
 final_data %>% 
   mutate(state = fct_reorder(state, mortality_rate)) %>% 
   ggplot(aes(x = mortality_rate, y = pm2.5, color = state)) + 
@@ -186,7 +187,10 @@ final_data %>%
         legend.key.size = unit(0.05, "cm")) + 
   labs(x = "Mortality Rate",
        y = "PM2.5") 
-  
-
+## fit simple linear regression model 
+air_regression<-lm(final_data$mortality_rate~final_data$pm2.5) 
+summary(air_regression)
 
 ```
+
+From the scatterplot, we can see that the points are spread randomlly. However, the relationship between pm2.5 and mortality rate is unclear. For the states, with low pm2.5, some of them have low mortality rate and some of them have high mortality rate. After we fit the simple regression model, the p-value for pm2.5 is 0.836, so it is a non-significant variable.  
