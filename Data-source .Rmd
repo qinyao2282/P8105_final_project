@@ -37,8 +37,9 @@ Add air quality data
 ```{r}
 airquality_2015 = read_csv("data/airquality.csv") %>%
   janitor::clean_names() %>%
-  select(state, pm2_5) 
-
+  select(state, pm2_5) %>% 
+  group_by(state) %>% 
+  summarize(pm2.5 = sum(pm2_5))
 
 ```
 
@@ -127,8 +128,7 @@ Find the association between income and heart disease mortality
 
 final_data_income =
   final_data %>% 
-  select(-us)  
-
+  select(-us) %>% 
   
 
 ```
