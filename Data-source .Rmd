@@ -129,6 +129,7 @@ Find the association between income and heart disease mortality
 final_data_income =
   final_data %>% 
   select(-us)  
+
   
 
 ```
