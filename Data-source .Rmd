@@ -148,6 +148,7 @@ Find the association between smoke and heart disease mortality
   
 ```
 
+
 Find the association between income and heart disease mortality
 
 ```{r}
@@ -167,6 +168,9 @@ final_data_income %>%
     x = "Mortality Rate",
     y = "median_income"
   )
+
+lm(mortality_rate ~ median_income, data = final_data_income) %>% 
+  summary()
 
 ```
 
