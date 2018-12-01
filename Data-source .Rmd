@@ -212,9 +212,9 @@ From the scatterplot, we can see that the points are spread randomlly. However, 
 ###Map
 
 ```{r}
-<<<<<<< HEAD
+
 states<- map_data("states") 
-=======
+
 
 map_data = final_data %>% 
     mutate(state = tolower(state)) 
@@ -277,7 +277,7 @@ p <- plot_geo(df, locationmode = 'USA-states') %>%
     geo = g
   )
 p
->>>>>>> be78a5b624d48da29181bda0455e600e822fed8a
+
 
 ```
 
