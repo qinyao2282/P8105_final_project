@@ -16,9 +16,14 @@ library(dplyr)
 library(stringr)
 library(readr)
 library(readxl)
+<<<<<<< HEAD
 library(plotly)
 library(maps)
 
+=======
+library(maps)
+library(ggmap)
+>>>>>>> 23921c47affc8a7747626c34299fa78bcf83b5f4
 ```
 
 Read original data 
@@ -198,12 +203,12 @@ final_data %>%
 air_regression<-lm(final_data$mortality_rate~final_data$pm2.5) 
 summary(air_regression)
 
-
   
 ```
 
 From the scatterplot, we can see that the points are spread randomlly. However, the relationship between pm2.5 and mortality rate is unclear. For the states, with low pm2.5, some of them have low mortality rate and some of them have high mortality rate. After we fit the simple regression model, the p-value for pm2.5 is 0.836, so it is a non-significant variable.  
 
+<<<<<<< HEAD
 
 ###Map
 
@@ -270,5 +275,9 @@ p <- plot_geo(df, locationmode = 'USA-states') %>%
     geo = g
   )
 p
+=======
+```{r}
+states<- map_data("states") 
+>>>>>>> 23921c47affc8a7747626c34299fa78bcf83b5f4
 ```
 
