@@ -168,8 +168,6 @@ final_data_income %>%
     y = "median_income"
   )
 
-
-lm()
 ```
 
 
@@ -190,7 +188,6 @@ final_data %>%
         legend.key.size = unit(0.05, "cm")) + 
   labs(x = "Mortality Rate",
        y = "PM2.5") 
-  
 
 
 ```
