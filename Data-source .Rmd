@@ -204,5 +204,6 @@ From the scatterplot, we can see that the points are spread randomlly. However, 
 
 ```{r}
 states<- map_data("states") 
+
 ```
 
