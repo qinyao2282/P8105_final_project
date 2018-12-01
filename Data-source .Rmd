@@ -136,6 +136,6 @@ Find the association between income and heart disease mortality
 
 ```{r}
 overall_data %>% 
-  rename(pm2.5 = sum(pm2_5))
+  rename(pm2.5 = sum(pm2_5)) 
 ```
 
