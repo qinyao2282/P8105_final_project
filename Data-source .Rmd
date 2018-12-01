@@ -148,3 +148,45 @@ Find the association between smoke and heart disease mortality
   
 ```
 
+Find the association between income and heart disease mortality
+
+```{r}
+
+final_data_income = 
+  final_data %>% 
+  mutate(state = forcats::fct_reorder(factor(state), median_income)) 
+
+final_data_income %>% 
+  ggplot(aes(x = mortality_rate, y = median_income, color = state)) +
+  geom_point() +
+  theme(text = element_text(size = 8), axis.text.x = element_text(angle = 60, hjust = 1), legend.position = "bottom") + 
+
+  #Add the title and the name for x and y axis. 
+  labs(
+    title = "Association between Income and Heart Disease Mortality Rate",
+    x = "Mortality Rate",
+    y = "median_income"
+  )
+
+
+lm()
+```
+
+
+```{r}
+
+final_data %>% 
+  mutate(state = fct_reorder(state, mortality_rate)) %>% 
+  ggplot(aes(x = mortality_rate, y = pm2.5, color = state)) + 
+  geom_point() +
+  ggtitle("Airquality VS Mortality Rate ") +
+  theme(legend.position = "bottom",
+        legend.direction = "horizontal",
+        axis.text.x = element_text(angle = 90, size = 6),
+        legend.key.size = unit(0.05, "cm")) + 
+  labs(x = "Mortality Rate",
+       y = "PM2.5") 
+  
+
+
+```
