@@ -86,3 +86,40 @@ smoking_data = read_csv("data/smoking.csv")
 data_income_obesity = left_join(income_data,data_with_obesity, by = "state")
 ```
 
+(from here)
+
+
+Find the association between average stroke value and average heart disease mortality, and SLR for all counties using wtfdata
+```{r}
+mydata1=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(mortality_rate = data_value) %>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(stratification1 == "Overall", stratification2 == "Overall")%>%
+  select(state, location_desc, mortality_rate)
+  
+
+mydata2=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(stroke_value = data_value) %>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(stratification1 == "Overall", stratification2 == "Overall")%>%
+  select(state, location_desc, stroke_value)
+                                                                                                                    
+comdata = left_join(mydata1,mydata2)  
+final_data %>%
+  mutate(state = forcats::fct_reorder(state,stroke_value)) %>%
+  ggplot(aes(x = mortality_rate, y = stroke_value)) + 
+  geom_point(aes(color = state), alpha = .5)
+comdata %>%
+  mutate(state = forcats::fct_reorder(state,stroke_value)) %>%
+  ggplot(aes(x = mortality_rate, y = stroke_value)) + 
+  geom_point(aes(color = state), alpha = .5)
+stroke_slm=lm(mortality_rate~stroke_value,data=comdata)
+summary(stroke_slm)
+  
+
+```
+
