@@ -141,10 +141,10 @@ Find the association between smoke and heart disease mortality
   geom_point(aes(color = state), alpha = .5) +
   labs(
     title = "Tabacco Consumption Accross states"
-  )+
+  ) +
   theme(text = element_text(size = 8), axis.text = element_text(angle = 60, hjust = 1), legend.position = "bottom")
  
-lm(mortality_rate~tobacco_consumption, data=final_data) %>%
+lm(mortality_rate~tobacco_consumption, data = final_data) %>%
 summary()
   
 ```
