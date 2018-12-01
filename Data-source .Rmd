@@ -134,7 +134,17 @@ final_data = left_join(stroke_data, data_income_obesity_smoking_air, by = "state
 Find the association between income and heart disease mortality
 
 ```{r}
-
+final_data %>% 
+  mutate(state = fct_reorder(state, mortality_rate)) %>% 
+  ggplot(aes(x = mortality_rate, y = pm2.5, color = state)) + 
+  geom_point() +
+  ggtitle("Airquality VS Mortality Rate ") +
+  theme(legend.position = "bottom",
+        legend.direction = "horizontal",
+        axis.text.x = element_text(angle = 90, size = 6),
+        legend.key.size = unit(0.05, "cm")) + 
+  labs(x = "Mortality Rate",
+       y = "PM2.5") 
   
 
 ```
