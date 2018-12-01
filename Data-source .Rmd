@@ -154,6 +154,7 @@ final_data_income %>%
 
 
 
+
 final_data %>% 
   mutate(state = fct_reorder(state, mortality_rate)) %>% 
   ggplot(aes(x = mortality_rate, y = pm2.5, color = state)) + 
