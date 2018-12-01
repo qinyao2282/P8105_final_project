@@ -144,10 +144,10 @@ Find the association between smoke and heart disease mortality
   )+
   theme(text = element_text(size = 8), axis.text = element_text(angle = 60, hjust = 1), legend.position = "bottom")
  
-
+lm(mortality_rate~tobacco_consumption, data=final_data) %>%
+summary()
   
 ```
-
 
 Find the association between income and heart disease mortality
 
@@ -169,14 +169,9 @@ final_data_income %>%
     y = "median_income"
   )
 
-lm(mortality_rate ~ median_income, data = final_data_income) %>% 
-  summary()
 
+lm()
 ```
-
-From the lm result, we can observe that median_income is a very significant variable with a p value of 1.3e-08. This indicates there is a strong association between income and heart disease mortality rate. 
-
-
 
 
 ```{r}
@@ -193,5 +188,5 @@ final_data %>%
   labs(x = "Mortality Rate",
        y = "PM2.5") 
 
-
+  
 ```
