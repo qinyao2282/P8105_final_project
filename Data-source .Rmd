@@ -213,7 +213,8 @@ Find the association between average stroke value and average heart disease mort
 ```{r}
 mydata1=heart_disease_stratify%>%
   filter(stratification1 == "Overall", stratification2 == "Overall")%>%
-  select(state, location_desc, mortality_rate)
+  select(state, location_desc, mortality_rate)%>%
+  filter(!is.na(mortality_rate))
   
 mydata2=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
   janitor::clean_names() %>%
@@ -221,7 +222,8 @@ mydata2=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Terr
   rename(stroke_value = data_value) %>%
   mutate(state = state.name[match(state, state.abb)])%>%
   filter(stratification1 == "Overall", stratification2 == "Overall")%>%
-  select(state, location_desc, stroke_value)
+  select(state, location_desc, stroke_value)%>%
+  filter(!is.na(stroke_value))
                                                                                                                     
 comdata = left_join(mydata1,mydata2)  
 
