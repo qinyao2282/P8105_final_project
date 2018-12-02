@@ -171,4 +171,4 @@ new_stroke_race_data=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___
   select(state, location_desc, stroke_value,race)
 new_race_data=left_join(new_heart_race_data,new_stroke_race_data)
 ```
-
+* From the linear regression, we find that p-value is less than 2e-16, indicates there is very significant association between stroke and heart disease mortality. From the plot, we can see that with higher stroke value, the heart disease mortality rate goes higher.
