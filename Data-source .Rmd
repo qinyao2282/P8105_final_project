@@ -123,3 +123,52 @@ summary(stroke_slm)
 
 ```
 
+find association between heart disease and stroke based on gender and race
+```{r}
+new_heart_gender_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(mortality_rate = data_value) %>%
+  rename(gender=stratification1)%>%
+  rename(race=stratification2)%>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(gender%in%c("Male","Female"))%>%
+  filter(race=="Overall")%>%
+  select(state,location_desc, mortality_rate,gender)
+
+new_stroke_gender_data=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(stroke_value = data_value) %>%
+  rename(gender=stratification1)%>%
+  rename(race=stratification2)%>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(gender%in%c("Male","Female"))%>%
+  filter(race=="Overall")%>%
+  select(state, location_desc, stroke_value,gender)
+new_gender_data=left_join(new_heart_gender_data,new_stroke_gender_data)
+
+new_heart_race_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(mortality_rate = data_value) %>%
+  rename(gender=stratification1)%>%
+  rename(race=stratification2)%>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(gender=="Overall")%>%
+  filter(!(race=="Overall"))%>%
+  select(state,location_desc, mortality_rate,race)
+
+new_stroke_race_data=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(stroke_value = data_value) %>%
+  rename(gender=stratification1)%>%
+  rename(race=stratification2)%>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(gender=="Overall")%>%
+  filter(!(race=="Overall"))%>%
+  select(state, location_desc, stroke_value,race)
+new_race_data=left_join(new_heart_race_data,new_stroke_race_data)
+```
+
