@@ -108,7 +108,7 @@ final_data = read_csv("data/final_data.csv")
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Aisle v.s. Order Number
+### Fctors Might Causing Heart Disease
 
 ```{r}
 final_data_mlr = final_data %>% 
@@ -140,23 +140,38 @@ ggplotly(mlr)
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Interval between Orders for Each Aisle
+### Interaction between Stroke and Gender
 
 ```{r}
 gender_stroke = ggplot(new_gender_data,aes(x=mortality_rate,y=stroke_value))+
-  geom_point(aes(color=gender), alpha = .5)
+  geom_point(aes(color=gender), alpha = .5) +
+  
+  #Add the title and the name for x and y axis. 
+  labs(
+    title = "Interaction between Stroke and Gender",
+    x = "mortality_rate",
+    y = "stroke_value"
+  )
 
-ggplotly(gender_stroke)
+
+ggplotly(gender_stroke) 
 
 ```
 
-### Order Hour For Different Department
+### Interaction between Stroke and Race
 
 ```{r}
 race_stroke = ggplot(new_race_data, aes(x=mortality_rate,y=stroke_value))+
-  geom_point(aes(color=race))
+  geom_point(aes(color=race)) +
+  
+  #Add the title and the name for x and y axis. 
+  labs(
+    title = "Interaction between Stroke and Race",
+    x = "mortality_rate",
+    y = "stroke_value"
+  )
 
-ggplotly(race_stroke)
+ggplotly(race_stroke) 
 
 ```
 
