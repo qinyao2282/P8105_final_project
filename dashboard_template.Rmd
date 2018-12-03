@@ -194,6 +194,9 @@ Column {data-width=650}
 ### Aisle v.s. Order Number
 
 ```{r}
+final_data %>% 
+  lm(mortality_rate ~ median_income + pm2.5 + obesity_percentage + stroke_value + tobacco_consumption, data = .)
+
 
   
 ```
