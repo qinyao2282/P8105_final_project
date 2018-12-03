@@ -111,17 +111,27 @@ Column {data-width=650}
 ### Aisle v.s. Order Number
 
 ```{r}
-final_data %>% 
+final_data_mlr = final_data %>% 
   lm(mortality_rate ~ median_income + pm2.5 + obesity_percentage + stroke_value + tobacco_consumption, data = .) %>% 
   broom::tidy() %>% 
-  mutate(OR = exp(estimate), 
-         
-         # Add the confidence interval
-         
-         ci_lower = exp(estimate - qnorm(0.975) * std.error),
-         ci_upper =  exp(estimate + qnorm(0.975) * std.error))
+  
+  mutate(term = forcats::fct_reorder(factor(term), p.value)) %>% 
+  filter(term != "(Intercept)") %>% 
+  mutate(estimate = round(estimate, digits = 3), p.value = round(p.value, digits = 3))
 
+ mlr =  ggplot(final_data_mlr, aes( x = term, y = p.value)) +
+  geom_bar(stat="identity", fill="steelblue") +
+   geom_text(aes(label = p.value), vjust=1.6, color="white", size=3.5) +
+  theme(text = element_text(size = 8), axis.text.x = element_text(angle = 60, hjust = 1)) + 
+  
+  #Add the title and the name for x and y axis. 
+  labs(
+    title = "Fctors Might Causing Heart Disease",
+    x = "Factors",
+    y = "p.value"
+  )
 
+ggplotly(mlr)
   
 ```
 
