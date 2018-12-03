@@ -1,0 +1,162 @@
+---
+title: "Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+## Loading required packages
+
+library(tidyverse)
+library(dplyr)
+library(stringr)
+library(readr)
+library(readxl)
+
+library(plotly)
+library(maps)
+
+
+library(maps)
+
+new_heart_gender_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(mortality_rate = data_value) %>%
+  rename(gender=stratification1)%>%
+  rename(race=stratification2)%>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(gender%in%c("Male","Female"))%>%
+  filter(race=="Overall")%>%
+  select(state,location_desc, mortality_rate,gender)
+
+new_stroke_gender_data=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(stroke_value = data_value) %>%
+  rename(gender=stratification1)%>%
+  rename(race=stratification2)%>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(gender%in%c("Male","Female"))%>%
+  filter(race=="Overall")%>%
+  select(state, location_desc, stroke_value,gender)
+new_gender_data=left_join(new_heart_gender_data,new_stroke_gender_data)%>%
+  filter(!is.na(stroke_value))
+gender_reg=lm(mortality_rate~stroke_value+gender+stroke_value*gender,data=new_gender_data)
+summary(gender_reg)
+ggplot(new_gender_data,aes(x=mortality_rate,y=stroke_value))+
+  geom_point(aes(color=gender), alpha = .5)
+  
+
+new_heart_race_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(mortality_rate = data_value) %>%
+  rename(gender=stratification1)%>%
+  rename(race=stratification2)%>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(gender=="Overall")%>%
+  filter(!(race=="Overall"))%>%
+  select(state, location_desc, mortality_rate, race)
+
+new_stroke_race_data=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(stroke_value = data_value) %>%
+  rename(gender=stratification1)%>%
+  rename(race=stratification2)%>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(gender=="Overall")%>%
+  filter(!(race=="Overall"))%>%
+  select(state, location_desc, stroke_value,race)
+new_race_data=left_join(new_heart_race_data,new_stroke_race_data)%>%
+  filter(!is.na(stroke_value))
+race_reg=lm(mortality_rate~stroke_value+race+stroke_value*race,data=new_race_data)
+summary(race_reg)
+ggplot(new_race_data, aes(x=mortality_rate,y=stroke_value))+
+  geom_point(aes(color=race))
+```
+
+
+
+Add income
+
+```{r}
+income_data = read_excel("data/income_2015.xlsx", range = "A4:D55") %>%
+  janitor::clean_names() %>%
+  rename(state = united_states, median_income = x55117, income_standard_error = x253) 
+data_with_income = left_join(heart_disease,income_data, by = "state")
+```
+
+
+
+
+```{r}
+data_income_obesity = left_join(income_data,data_with_obesity, by = "state")
+
+
+smoking_data = read_csv("data/smoking.csv") %>% 
+  filter(YEAR == "2015-2016") %>% 
+  mutate(year = 2015) %>% 
+  rename(state = LocationDesc) %>% 
+  select(-YEAR) %>% 
+
+  select(year, state, Data_Value) %>% 
+
+  select(year, state, Data_Value) %>% 
+  rename(tobacco_comsumption = Data_Value) %>% 
+  group_by(state) %>% 
+  summarise(tobacco_consumption = sum(tobacco_comsumption))
+
+
+data_income_obesity_smoking = left_join(smoking_data, data_income_obesity, by = "state")
+
+data_income_obesity_smoking_air = left_join(airquality_2015, data_income_obesity_smoking, by = "state")
+
+
+
+
+data_income_obesity_smoking = left_join(smoking_data, data_income_obesity, by = "state")
+data_income_obesity_smoking_air = left_join(airquality_2015, data_income_obesity_smoking, by = "state")
+
+
+final_data = left_join(stroke_data, data_income_obesity_smoking_air, by = "state") 
+
+
+
+  
+
+```
+
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Aisle v.s. Order Number
+
+```{r}
+
+  
+```
+
+
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Interval between Orders for Each Aisle
+
+```{r}
+
+```
+
+### Order Hour For Different Department
+
+```{r}
+
+
+
+```
+
