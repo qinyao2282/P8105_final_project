@@ -100,93 +100,10 @@ heart_disease %>%
   
 ```
 
-Add air quality data 
-
 ```{r}
-airquality_2015 = read_csv("data/airquality.csv") %>%
-  janitor::clean_names() %>%
-  select(state, pm2_5) %>% 
-  group_by(state) %>% 
-  summarize(pm2.5 = sum(pm2_5))
-
+final_data = read_csv("data/final_data.csv")
 ```
 
-Add obesity data
-
-```{r add_obesity_data}
-obesity_data = read_csv("data/National_Obesity_By_State.csv") %>%
-  janitor::clean_names() %>%
-  rename(state = name) %>%
-  rename(obesity_percentage = obesity) %>%
-  select(state, obesity_percentage) 
-data_with_obesity = left_join(heart_disease, obesity_data)
-```
-
-Add stroke data
-
-```{r add_stroke_data}
-stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
-  janitor::clean_names() %>%
-  rename(stroke_value=data_value)%>%
-  rename(state = location_abbr) %>%
-  mutate(state = state.name[match(state, state.abb)])%>%
-
-  select(state,stroke_value) %>% 
-  group_by(state) %>% 
-  filter(!is.na(stroke_value)) %>% 
-  summarize(stroke_value = sum(stroke_value)) 
-```
-
-
-
-Add income
-
-```{r}
-income_data = read_excel("data/income_2015.xlsx", range = "A4:D55") %>%
-  janitor::clean_names() %>%
-  rename(state = united_states, median_income = x55117, income_standard_error = x253) 
-data_with_income = left_join(heart_disease,income_data, by = "state")
-```
-
-
-
-
-```{r}
-data_income_obesity = left_join(income_data,data_with_obesity, by = "state")
-
-
-smoking_data = read_csv("data/smoking.csv") %>% 
-  filter(YEAR == "2015-2016") %>% 
-  mutate(year = 2015) %>% 
-  rename(state = LocationDesc) %>% 
-  select(-YEAR) %>% 
-
-  select(year, state, Data_Value) %>% 
-
-  select(year, state, Data_Value) %>% 
-  rename(tobacco_comsumption = Data_Value) %>% 
-  group_by(state) %>% 
-  summarise(tobacco_consumption = sum(tobacco_comsumption))
-
-
-data_income_obesity_smoking = left_join(smoking_data, data_income_obesity, by = "state")
-
-data_income_obesity_smoking_air = left_join(airquality_2015, data_income_obesity_smoking, by = "state")
-
-
-
-
-data_income_obesity_smoking = left_join(smoking_data, data_income_obesity, by = "state")
-data_income_obesity_smoking_air = left_join(airquality_2015, data_income_obesity_smoking, by = "state")
-
-
-final_data = left_join(stroke_data, data_income_obesity_smoking_air, by = "state") 
-
-
-
-  
-
-```
 
 Column {data-width=650}
 -----------------------------------------------------------------------
@@ -195,7 +112,14 @@ Column {data-width=650}
 
 ```{r}
 final_data %>% 
-  lm(mortality_rate ~ median_income + pm2.5 + obesity_percentage + stroke_value + tobacco_consumption, data = .)
+  lm(mortality_rate ~ median_income + pm2.5 + obesity_percentage + stroke_value + tobacco_consumption, data = .) %>% 
+  broom::tidy() %>% 
+  mutate(OR = exp(estimate), 
+         
+         # Add the confidence interval
+         
+         ci_lower = exp(estimate - qnorm(0.975) * std.error),
+         ci_upper =  exp(estimate + qnorm(0.975) * std.error))
 
 
   
