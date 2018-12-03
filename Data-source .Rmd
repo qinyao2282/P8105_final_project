@@ -173,7 +173,7 @@ Find the association between obesity and heart disease mortality
         legend.position = "bottom",
         plot.title = element_text(hjust = 0.5))
   
-  lm(mortality_rate ~ obesity_percentage, data = final_data_income) %>% 
+  lm(mortality_rate ~ obesity_percentage, data = final_data) %>% 
   broom::tidy()
  
 ```
@@ -370,7 +370,7 @@ p
 final_data = final_data %>%
   janitor::clean_names()
 
-total_lm = lm(mortality_rate ~ tobacco_consumption + median_income + obesity_percentage + sum_pm2_5 + stroke_value, data = final_data) %>%
+total_lm = lm(mortality_rate ~ tobacco_consumption + median_income + obesity_percentage + pm2_5 + stroke_value, data = final_data) %>%
   fortify()
 
 
