@@ -131,7 +131,7 @@ data_income_obesity_smoking = left_join(smoking_data, data_income_obesity, by = 
 data_income_obesity_smoking_air = left_join(airquality_2015, data_income_obesity_smoking, by = "state")
 
 
-final_data = left_join(stroke_data, data_income_obesity_smoking_air, by = "state") 
+final_data_export = left_join(stroke_data, data_income_obesity_smoking_air, by = "state") 
 
 
 
@@ -140,9 +140,15 @@ final_data = left_join(stroke_data, data_income_obesity_smoking_air, by = "state
 ```
 
 
+```{r}
+
+write.csv(final_data_export, file = "data/final_data.csv")
+```
+
 
 Find the association between smoke and heart disease mortality
 ```{r}
+final_data = read_csv("data/final_data.csv")
   final_data %>%
   mutate(state = forcats::fct_reorder(factor(state), tobacco_consumption)) %>%
   ggplot(aes(x = mortality_rate, y = tobacco_consumption)) + 

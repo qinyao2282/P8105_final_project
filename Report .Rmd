@@ -1,6 +1,5 @@
 ---
 title: "Report"
-author: "Haowei Ni"
 date: "2018/12/3"
 output: github_document
 ---
@@ -27,4 +26,4 @@ Member: Haowei Ni, Qinyao Wu, Jiabei Wang, Shuo Yan, Bihui Sun
 
 •	Additional analysis: Because gender and race are categorical variable, so we want to measure the interaction between these two. Further more, we make a multi linear regression model that only include the significant variable that we discussed above. 
 
-•	Conclusion: 
+•	Discussion: 
