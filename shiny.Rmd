@@ -34,7 +34,7 @@ library(plotly)
 ```{r}
 final_data = read_csv("./data/final_data.csv")
 
-variable = list("stroke_value", "pm2.5", "tobacco_consumption", "median_income", "obesity_percentage")
+variable = list("obesity_percentage", "stroke_value", "pm2.5", "tobacco_consumption", "median_income")
 ```
 
 
@@ -75,11 +75,16 @@ renderPlotly({
   
   colnames(plot_data) = c("variable_value", "mortality_rate")
   
+  plot_data = plot_data %>%
+     mutate(text_label = str_c(variable_name, ": ", variable_value, '\nMortality rate: ', mortality_rate))
+  
   plot_data %>%
 
-  plot_ly(x = ~ variable_value, y = ~mortality_rate, type = "scatter",
-
-          alpha = 0.5)
+  plot_ly(x = ~ variable_value, y = ~mortality_rate, type = "scatter", mode = "markers",
+          alpha = 0.5,
+          text = ~text_label) %>%
+    layout(xaxis = list(title = variable_name),
+           yaxis = list(title = "Mortality Rate"))
 })
 
 ```
