@@ -157,6 +157,28 @@ summary()
   
 ```
 
+Find the association between obesity and heart disease mortality
+```{r}
+  final_data %>%
+  ggplot(aes(x = obesity_percentage, y = mortality_rate)) + 
+  geom_point(aes(color = state), alpha = .5) +
+  stat_smooth(method = "lm", col = "red") +
+  labs(
+    x = "Obesity(%)",
+    y = "Mortality",
+    title = "Heart Disease Mortality vs Obesity"
+  ) +
+  theme(text = element_text(size = 8), 
+        axis.text = element_text(angle = 60, hjust = 1), 
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5))
+  
+  lm(mortality_rate ~ obesity_percentage, data = final_data_income) %>% 
+  broom::tidy()
+ 
+```
+
+
 Find the association between income and heart disease mortality
 
 ```{r}
@@ -343,4 +365,19 @@ p <- plot_geo(a, locationmode = 'USA-states') %>%
 p
 
 ```
+```{r}
+final_data = final_data %>%
+  janitor::clean_names()
 
+total_lm = lm(mortality_rate ~ tobacco_consumption + median_income + obesity_percentage + sum_pm2_5 + stroke_value, data = final_data) %>%
+  fortify()
+
+ggplot(total_lm, aes(x = .fitted, y = .resid)) + geom_point() + 
+  stat_smooth(method = "lm", col = "red") +
+  labs(
+    x = "Fitted value",
+    y = "Residual",
+    title = "Residuals vs Fitted"
+  ) +
+  theme(plot.title = element_text(hjust = 0.5))
+```
