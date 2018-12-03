@@ -2,7 +2,7 @@
 title: "Data_source"
 author: "Haowei Ni"
 date: "2018/11/19"
-output: github_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -211,7 +211,6 @@ From the scatterplot, we can see that the points are spread randomlly. However, 
 
 ###Map
 
-
 ```{r}
 library(plotly)
 map_data = final_data %>% 
@@ -248,4 +247,5 @@ p <- plot_geo(a, locationmode = 'USA-states') %>%
 p
 
 ```
+
 
