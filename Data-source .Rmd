@@ -157,6 +157,28 @@ summary()
   
 ```
 
+Find the association between obesity and heart disease mortality
+```{r}
+  final_data %>%
+  ggplot(aes(x = obesity_percentage, y = mortality_rate)) + 
+  geom_point(aes(color = state), alpha = .5) +
+  stat_smooth(method = "lm", col = "red") +
+  labs(
+    x = "Obesity(%)",
+    y = "Mortality",
+    title = "Heart Disease Mortality vs Obesity"
+  ) +
+  theme(text = element_text(size = 8), 
+        axis.text = element_text(angle = 60, hjust = 1), 
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5))
+  
+  lm(mortality_rate ~ obesity_percentage, data = final_data) %>% 
+  broom::tidy()
+ 
+```
+
+
 Find the association between income and heart disease mortality
 
 ```{r}
@@ -209,8 +231,102 @@ summary(air_regression)
 From the scatterplot, we can see that the points are spread randomlly. However, the relationship between pm2.5 and mortality rate is unclear. For the states, with low pm2.5, some of them have low mortality rate and some of them have high mortality rate. After we fit the simple regression model, the p-value for pm2.5 is 0.836, so it is a non-significant variable.  
 
 
-###Map
+Find the association between average stroke value and average heart disease mortality, and SLR for all counties using wtfdata
+```{r}
+mydata1=heart_disease_stratify%>%
+  filter(stratification1 == "Overall", stratification2 == "Overall")%>%
+  select(state, location_desc, mortality_rate)%>%
+  filter(!is.na(mortality_rate))
+  
+mydata2=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(stroke_value = data_value) %>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(stratification1 == "Overall", stratification2 == "Overall")%>%
+  select(state, location_desc, stroke_value)%>%
+  filter(!is.na(stroke_value))
+                                                                                                                    
+comdata = left_join(mydata1,mydata2)  
 
+final_data %>%
+  mutate(state = forcats::fct_reorder(state,stroke_value)) %>%
+  ggplot(aes(x = mortality_rate, y = stroke_value)) + 
+  geom_point(aes(color = state), alpha = .5)
+comdata %>%
+  mutate(state = forcats::fct_reorder(state,stroke_value)) %>%
+  ggplot(aes(x = mortality_rate, y = stroke_value)) + 
+  geom_point(aes(color = state), alpha = .5)
+stroke_slm=lm(mortality_rate~stroke_value,data=comdata)
+summary(stroke_slm)
+```
+* From the linear regression, we find that p-value is less than 2e-16, indicates there is very significant association between stroke and heart disease mortality. From the plot, we can see that with higher stroke value, the heart disease mortality rate goes higher.
+
+
+find association between heart disease, stroke based, gender and race
+```{r}
+new_heart_gender_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(mortality_rate = data_value) %>%
+  rename(gender=stratification1)%>%
+  rename(race=stratification2)%>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(gender%in%c("Male","Female"))%>%
+  filter(race=="Overall")%>%
+  select(state,location_desc, mortality_rate,gender)
+
+new_stroke_gender_data=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(stroke_value = data_value) %>%
+  rename(gender=stratification1)%>%
+  rename(race=stratification2)%>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(gender%in%c("Male","Female"))%>%
+  filter(race=="Overall")%>%
+  select(state, location_desc, stroke_value,gender)
+new_gender_data=left_join(new_heart_gender_data,new_stroke_gender_data)%>%
+  filter(!is.na(stroke_value))
+gender_reg=lm(mortality_rate~stroke_value+gender+stroke_value*gender,data=new_gender_data)
+summary(gender_reg)
+ggplot(new_gender_data,aes(x=mortality_rate,y=stroke_value))+
+  geom_point(aes(color=gender), alpha = .5)
+  
+
+new_heart_race_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(mortality_rate = data_value) %>%
+  rename(gender=stratification1)%>%
+  rename(race=stratification2)%>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(gender=="Overall")%>%
+  filter(!(race=="Overall"))%>%
+  select(state, location_desc, mortality_rate, race)
+
+new_stroke_race_data=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(stroke_value = data_value) %>%
+  rename(gender=stratification1)%>%
+  rename(race=stratification2)%>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+  filter(gender=="Overall")%>%
+  filter(!(race=="Overall"))%>%
+  select(state, location_desc, stroke_value,race)
+new_race_data=left_join(new_heart_race_data,new_stroke_race_data)%>%
+  filter(!is.na(stroke_value))
+race_reg=lm(mortality_rate~stroke_value+race+stroke_value*race,data=new_race_data)
+summary(race_reg)
+ggplot(new_race_data, aes(x=mortality_rate,y=stroke_value))+
+  geom_point(aes(color=race))
+```
+* From the interaction, we find that the p-value of "stroke_value : gender" is very small, indicate "gender" modifies the relationship between geart disease mortality and stroke mortality. With the plot, we can find that males have higher heart disease mortality rate, but the stroke mortality rate is similar.
+* From the linear regression model, we find that the Black has the highest heart disease mortality rate, and the Hispanic the least.
+???????
+
+###Map
 
 ```{r}
 library(plotly)
@@ -247,5 +363,24 @@ p <- plot_geo(a, locationmode = 'USA-states') %>%
   )
 p
 
+```
+
+
+```{r}
+final_data = final_data %>%
+  janitor::clean_names()
+
+total_lm = lm(mortality_rate ~ tobacco_consumption + median_income + obesity_percentage + pm2_5 + stroke_value, data = final_data) %>%
+  fortify()
+
+
+ggplot(total_lm, aes(x = .fitted, y = .resid)) + geom_point() + 
+  stat_smooth(method = "lm", col = "red") +
+  labs(
+    x = "Fitted value",
+    y = "Residual",
+    title = "Residuals vs Fitted"
+  ) +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
