@@ -44,10 +44,8 @@ new_stroke_gender_data=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35_
   select(state, location_desc, stroke_value,gender)
 new_gender_data=left_join(new_heart_gender_data,new_stroke_gender_data)%>%
   filter(!is.na(stroke_value))
-gender_reg=lm(mortality_rate~stroke_value+gender+stroke_value*gender,data=new_gender_data)
-summary(gender_reg)
-ggplot(new_gender_data,aes(x=mortality_rate,y=stroke_value))+
-  geom_point(aes(color=gender), alpha = .5)
+
+
   
 
 new_heart_race_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
@@ -73,10 +71,70 @@ new_stroke_race_data=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___
   select(state, location_desc, stroke_value,race)
 new_race_data=left_join(new_heart_race_data,new_stroke_race_data)%>%
   filter(!is.na(stroke_value))
-race_reg=lm(mortality_rate~stroke_value+race+stroke_value*race,data=new_race_data)
-summary(race_reg)
-ggplot(new_race_data, aes(x=mortality_rate,y=stroke_value))+
-  geom_point(aes(color=race))
+
+
+
+
+```
+
+```{r input_heart_disease_data}
+heart_disease_stratify =  read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(mortality_rate = data_value) %>%
+
+  mutate(state = state.name[match(state, state.abb)]) %>% 
+  select(-data_source, -geographic_level, -class, -topic, -data_value_footnote, -data_value_footnote_symbol, -topic_id, -location_id ) 
+
+heart_disease = heart_disease_stratify %>% 
+  filter(stratification1 == "Overall", stratification2 == "Overall") %>% 
+  select(-stratification1, -stratification2, -stratification_category1, -stratification_category2) 
+
+heart_disease$mortality_rate[is.na(heart_disease$mortality_rate)] = 0
+
+heart_disease = 
+heart_disease %>% 
+  group_by(state) %>% 
+  summarise(mortality_rate = mean(mortality_rate))
+  
+  
+```
+
+Add air quality data 
+
+```{r}
+airquality_2015 = read_csv("data/airquality.csv") %>%
+  janitor::clean_names() %>%
+  select(state, pm2_5) %>% 
+  group_by(state) %>% 
+  summarize(pm2.5 = sum(pm2_5))
+
+```
+
+Add obesity data
+
+```{r add_obesity_data}
+obesity_data = read_csv("data/National_Obesity_By_State.csv") %>%
+  janitor::clean_names() %>%
+  rename(state = name) %>%
+  rename(obesity_percentage = obesity) %>%
+  select(state, obesity_percentage) 
+data_with_obesity = left_join(heart_disease, obesity_data)
+```
+
+Add stroke data
+
+```{r add_stroke_data}
+stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+  janitor::clean_names() %>%
+  rename(stroke_value=data_value)%>%
+  rename(state = location_abbr) %>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+
+  select(state,stroke_value) %>% 
+  group_by(state) %>% 
+  filter(!is.na(stroke_value)) %>% 
+  summarize(stroke_value = sum(stroke_value)) 
 ```
 
 
@@ -130,7 +188,6 @@ final_data = left_join(stroke_data, data_income_obesity_smoking_air, by = "state
 
 ```
 
-
 Column {data-width=650}
 -----------------------------------------------------------------------
 
@@ -149,14 +206,20 @@ Column {data-width=350}
 ### Interval between Orders for Each Aisle
 
 ```{r}
+gender_stroke = ggplot(new_gender_data,aes(x=mortality_rate,y=stroke_value))+
+  geom_point(aes(color=gender), alpha = .5)
+
+ggplotly(gender_stroke)
 
 ```
 
 ### Order Hour For Different Department
 
 ```{r}
+race_stroke = ggplot(new_race_data, aes(x=mortality_rate,y=stroke_value))+
+  geom_point(aes(color=race))
 
-
+ggplotly(race_stroke)
 
 ```
 
