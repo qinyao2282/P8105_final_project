@@ -56,20 +56,8 @@ selectInput("map_choice", label = h3("Select map variable"),
 
             choices = map_variable, selected = "mortality_rate")
 
-```
-
-Column {data-width=650}
------------------------------------------------------------------------
 
 
-
-### Variable distribution
-
-
-
-```{r variable_distriution}
-
-renderPlotly({ 
   
   variable_name = input$variable_choice
   
@@ -84,6 +72,21 @@ renderPlotly({
     filter(!is.na(mortality_rate))
   
   fit = lm(mortality_rate ~ variable_value, data = plot_data)
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+
+
+### Variable distribution
+
+
+
+```{r variable_distriution}
+
+renderPlotly({ 
+
   
   plot_data %>%
   plot_ly(x = ~variable_value, y = ~mortality_rate, type = "scatter", mode = "markers",

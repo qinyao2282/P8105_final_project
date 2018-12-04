@@ -24,12 +24,17 @@ library(maps)
 library(maps)
 
 
+
 ```
 
 Read original data 
 
 ```{r input_heart_disease_data}
-heart_disease_stratify =  read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+
+install.packages('gsheet')
+library(gsheet)
+
+heart_disease_stratify = gsheet2tbl('docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
   rename(mortality_rate = data_value) %>%
@@ -93,9 +98,14 @@ stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_Stat
 Add income
 
 ```{r}
-income_data = read_excel("data/income_2015.xlsx", range = "A4:D55") %>%
-  janitor::clean_names() %>%
-  rename(state = united_states, median_income = x55117, income_standard_error = x253) 
+
+
+income_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1_Rd_dxRgMqOCaFC-8fWz6QODG8_IBZl1DnQOFaRxF0Q/edit?usp=sharing') %>% 
+  rename(state = "X1", us = "X2", median_income = "X3", income_standard_error = "X4" )
+
+income_data = income_data[3:53,]
+
+
 data_with_income = left_join(heart_disease,income_data, by = "state")
 ```
 
