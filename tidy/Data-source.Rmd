@@ -59,7 +59,8 @@ heart_disease %>%
 Add air quality data 
 
 ```{r}
-airquality_2015 = read_csv("data/airquality.csv") %>%
+airquality_2015 =
+  gsheet2tbl('https://docs.google.com/spreadsheets/d/1CRJzMI0QbqU34BZZQ1bg3BnZPM_oUfVUCVPOo4AnoB0/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   select(state, pm2_5) %>% 
   group_by(state) %>% 
@@ -70,7 +71,7 @@ airquality_2015 = read_csv("data/airquality.csv") %>%
 Add obesity data
 
 ```{r add_obesity_data}
-obesity_data = read_csv("data/National_Obesity_By_State.csv") %>%
+obesity_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1zlB2cOOMvD-IJIiGQ6YOyQ6QEXEKVAkrPTzxZrYci28/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   rename(state = name) %>%
   rename(obesity_percentage = obesity) %>%
@@ -116,7 +117,7 @@ data_with_income = left_join(heart_disease,income_data, by = "state")
 data_income_obesity = left_join(income_data,data_with_obesity, by = "state")
 
 
-smoking_data = read_csv("data/smoking.csv") %>% 
+smoking_data = gsheet2tbl("https://docs.google.com/spreadsheets/d/1ZU7uuqV-EZM81hE4kq0nFiPJHUMJj82fnXVllGFHJ00/edit?usp=sharing") %>% 
   filter(YEAR == "2015-2016") %>% 
   mutate(year = 2015) %>% 
   rename(state = LocationDesc) %>% 
