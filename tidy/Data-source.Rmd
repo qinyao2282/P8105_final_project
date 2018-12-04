@@ -60,11 +60,13 @@ heart_disease %>%
 
 Add air quality data 
 
+
+
 ```{r}
 airquality_2015 =
   gsheet2tbl('https://docs.google.com/spreadsheets/d/1CRJzMI0QbqU34BZZQ1bg3BnZPM_oUfVUCVPOo4AnoB0/edit?usp=sharing') %>%
   janitor::clean_names() %>%
-  select(state, pm2_5) %>% 
+  select(state, pm2_5) %>%   
   group_by(state) %>% 
   summarize(pm2.5 = sum(pm2_5))
 
