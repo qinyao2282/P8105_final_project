@@ -37,7 +37,7 @@ This project was aimed to make analysis towards the potential geographical and d
 
 * Click here to view our [MLR Analysis](mlr_analysis.html)
 
-* Our fantastic [shiny]
+* [shiny](https://sy2825.shinyapps.io/p8105_final_project)
 
 ### Conclusions and Public Implications
 
