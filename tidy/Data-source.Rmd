@@ -256,7 +256,7 @@ mydata1=heart_disease_stratify%>%
   select(state, location_desc, mortality_rate)%>%
   filter(!is.na(mortality_rate))
   
-mydata2=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+mydata2=gsheet2tbl('https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
   rename(stroke_value = data_value) %>%
@@ -283,7 +283,7 @@ summary(stroke_slm)
 
 find association between heart disease, stroke based, gender and race
 ```{r}
-new_heart_gender_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+new_heart_gender_data=gsheet2tbl('docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
   rename(mortality_rate = data_value) %>%
@@ -294,7 +294,7 @@ new_heart_gender_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adult
   filter(race=="Overall")%>%
   select(state,location_desc, mortality_rate,gender)
 
-new_stroke_gender_data=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+new_stroke_gender_data=gsheet2tbl('https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
   rename(stroke_value = data_value) %>%
@@ -324,7 +324,7 @@ ggplot(new_gender_data,aes(x=mortality_rate,y=stroke_value))+
   geom_point(aes(color=gender), alpha = .5)
   
 
-new_heart_race_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+new_heart_race_data=gsheet2tbl('docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
   rename(mortality_rate = data_value) %>%
@@ -335,7 +335,7 @@ new_heart_race_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults_
   filter(!(race=="Overall"))%>%
   select(state, location_desc, mortality_rate, race)
 
-new_stroke_race_data=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+new_stroke_race_data=gsheet2tbl('https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
   rename(stroke_value = data_value) %>%
