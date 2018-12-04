@@ -68,7 +68,7 @@ Column {data-width=650}
 
 renderPlotly({ 
   
-  variable_name = as.character(input$variable_choice)
+  variable_name = input$variable_choice
   
   plot_data = final_data %>%
     select(variable_name, mortality_rate)
@@ -76,15 +76,20 @@ renderPlotly({
   colnames(plot_data) = c("variable_value", "mortality_rate")
   
   plot_data = plot_data %>%
-     mutate(text_label = str_c(variable_name, ": ", variable_value, '\nMortality rate: ', mortality_rate))
+     mutate(text_label = str_c(variable_name, ": ", variable_value, '\nMortality rate: ', mortality_rate)) %>%
+    filter(!is.na(variable_value)) %>%
+    filter(!is.na(mortality_rate))
+  
+  fit = lm(mortality_rate ~ variable_value, data = plot_data)
   
   plot_data %>%
-
-  plot_ly(x = ~ variable_value, y = ~mortality_rate, type = "scatter", mode = "markers",
+  plot_ly(x = ~variable_value, y = ~mortality_rate, type = "scatter", mode = "markers",
           alpha = 0.5,
           text = ~text_label) %>%
     layout(xaxis = list(title = variable_name),
-           yaxis = list(title = "Mortality Rate"))
+           yaxis = list(title = "Mortality Rate"),
+           showlegend = F) %>%
+    add_lines(x = ~variable_value, y = fitted(fit))
 })
 
 ```
