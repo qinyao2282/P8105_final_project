@@ -11,7 +11,7 @@
 
 
 
-<title></title>
+<title>Report</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -22,6 +22,9 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -193,16 +196,7 @@ $(document).ready(function () {
   <a href="dashboard_template.html">FlexDashboard</a>
 </li>
 <li>
-  <a href="https://sy2825.shinyapps.io/p8105_final_project">
-    <span class=" Fantastic Shiny Dashbord for MAP"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="https://github.com/Jiabei2333">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
+  <a href="https://sy2825.shinyapps.io/p8105_final_project">Fantastic Shiny</a>
 </li>
 <li>
   <a href="mailto:&lt;jw3726@columbia.edu&gt;">
@@ -211,7 +205,7 @@ $(document).ready(function () {
   </a>
 </li>
 <li>
-  <a href="https://github.com/Jiabei2333">
+  <a href="https://github.com/qinyao2282/P8105_final_project">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -225,13 +219,12 @@ $(document).ready(function () {
 
 
 
+<h1 class="title toc-ignore">Report</h1>
+<h4 class="date"><em>2018/12/3</em></h4>
 
 </div>
 
 
-<div id="report" class="section level1">
-<h1>Report</h1>
-<p>2018/12/3</p>
 <p>Group project report</p>
 <p>Member: Haowei Ni, Qinyao Wu, Jiabei Wang, Shuo Yan, Bihui Sun</p>
 <p>• Motivation: The goal of this project is to analysis the factor that might contribute to the mortality rate of heart disease both demographically and geographically. The motivation is that as a public health student, it is our responsibility to learn about the diseases that keep threatening our lives and take early action for prevention. We believe that explore the factors that might related to the mortality rate of heart disease might be the next step that people take to assess possible treatment options.</p>
@@ -242,7 +235,6 @@ $(document).ready(function () {
 <p>• Exploratory analysis: For each variable, we make a scatterplot that can compare the mortality rate trend with the corresponding variable across each state. Then we make a simple linear regression to determine whether the variable has significant correlation with the mortality rate. # 1 Air quality From the scatterplot, we can see that the points are spread randomly. However, the relationship between pm2.5 and mortality rate is unclear. For the states, with low pm2.5, some of them have low mortality rate and some of them have high mortality rate. After we fit the simple regression model, the p-value for pm2.5 is 0.836, so it is a non-significant variable. # 2 Stroke From the linear regression, we find that p-value is less than 2e-16, indicates there is very significant association between stroke and heart disease mortality. From the plot, we can see that with higher stroke value, the heart disease mortality rate goes higher. # 3 Income From the plot, the fitted line is downward implying that the state with highst median income tend to have the lowest mortality rate. From the lm result, we can observe that median_income is a very significant variable with a p value of 1.3e-08. This indicates there is a strong association between income and heart disease mortality rate. # 4 Tabacco consumption From the plot, the fitted line fails to catch most of the points and points are spread randomly, so at this point we cannot make any conclusion. From the simple linear regression model, the p-value is 0.028 &lt; 0.05, indicating that there is strong correlation between tabacco comsumption and heart disease. # 5 Obesity From the plot, the fitted line is upward indicating that as the obesity percentage goes higher, the mortality rate would increase correspondingly.</p>
 <p>• Additional analysis: Because gender and race are categorical variable, so we want to measure the interaction between these two. Further more, we make a multi linear regression model that only include the significant variable that we discussed above.</p>
 <p>• Discussion:</p>
-</div>
 
 
 
