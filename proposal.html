@@ -11,7 +11,7 @@
 
 
 
-<title>MLR Analysis</title>
+<title></title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,15 +19,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -172,101 +166,6 @@ $(document).ready(function () {
 
 
 
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
 
 
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
@@ -308,26 +207,43 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">MLR Analysis</h1>
 
 </div>
 
 
-<div id="mlr-result" class="section level3">
-<h3>MLR Result</h3>
-<p><img src="image/mlr.png" style="width:75%"></p>
-<p>The logistic multiple linear regression model were generated and the result was shown below. This MLR model looks at the association between the mortality of heart disease and the five factors that we are interested in. The five factors are stroke value, median income, the air quality, the obesity percentage and the tobacco consumptions.</p>
-</div>
-<div id="final-model" class="section level3">
-<h3>Final Model</h3>
-<p>heart disease mortality = 266 + -0.0027 x median income + 8.4 x obesity percentage.</p>
-<p>This result indicates that Obesity level contributes a lot to the occurence of heart disease mortality.</p>
+<div id="proposal" class="section level1">
+<h1>proposal</h1>
+<p>11/8/2018</p>
+<ul>
+<li>The group members (names and UNIs)</li>
+</ul>
+<p>Qinyao Wu (qw2282) Haowei Ni (hn2339) Jiabei Wang (jw3726) Bihui Sun (bs3134) Shuo Yan (sy2825)</p>
+<ul>
+<li>The tentative project title</li>
+</ul>
+<p>Factors Associated With Heart Disease Mortality</p>
+<ul>
+<li>The motivation for this project</li>
+</ul>
+<p>Since heart disease is one of the leading cause of death in US, we would like to characterize the demographic information and try to find the underlying patterns.</p>
+<ul>
+<li>The intended final products</li>
+</ul>
+<p>In the end we will make a organized report including all the details regarding to our project. We will also make a webpage that can summarize and give an overview of our report. The project-related screencast will also be made and embed into our website. The report would include sections of introduction, data information, data analysis, and conclusion which describes the overall distribution of heart diseases.</p>
+<ul>
+<li>The anticipated data sources</li>
+</ul>
+<p>The data we are going to analyze for this project is posted on catalog.data.gov and is collected by National Vital Statistics System. The planned analyses / visualizations / coding challenges We will first tidy the data based on the age groups and races. the Since we plan to analyze the geographical information of heart disease mortality, we would like to make a map according to the distributions of heart diseases. We also plan to make plots about the comparison according to gender and race.</p>
+<ul>
+<li>The planned timeline</li>
+</ul>
+<p>Nov 12-16 Tidy the data</p>
+<p>Nov 16 - Nov 26 Make plots and visualize the data</p>
+<p>Nov 26 - Dec 6 Webpage and screencast</p>
 </div>
 
 
 
-</div>
-</div>
 
 </div>
 
