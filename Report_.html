@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="mailto:&lt;jw3726@columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/Jiabei2333">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+
+</div>
+
+
+<div id="report" class="section level1">
+<h1>Report</h1>
+<p>2018/12/3</p>
+<p>Group project report</p>
+<p>Member: Haowei Ni, Qinyao Wu, Jiabei Wang, Shuo Yan, Bihui Sun</p>
+<p>• Motivation: The goal of this project is to analysis the factor that might contribute to the mortality rate of heart disease both demographically and geographically. The motivation is that as a public health student, it is our responsibility to learn about the diseases that keep threatening our lives and take early action for prevention. We believe that explore the factors that might related to the mortality rate of heart disease might be the next step that people take to assess possible treatment options.</p>
+<p>• Related work: Heart disease is the leading cause of death for both men and women. About 610,000 people die of heart disease in the United States every year–that’s 1 in every 4 deaths. It is also the leading cause of death in most ethnicities groups, including white, African American, Asian and Hispanic.</p>
+<p>• Initial questions: What was the geographic distribution of mortality rate? Does the mortality rate has difference between the state that are in coastal area or inland area? Does the rate affect by the longitude or latitude? Which ethnic group has the highest morality rate? Does men have higher mortality rate than women? Are there any interactions between these two factors. After adding other variables that might affect the mortality rate, we came up with a new question. Can we make a logistic model for heart disease mortality rate based on the variables that have significant correlation?</p>
+<p>• Data: The data were obtained when searching for the key world “heart disease mortality rate” on the website <a href="https://www.data.gov/" class="uri">https://www.data.gov/</a> This website is an open data source in US that covered various topics including “Health”, which we take most interest in. Data was updated on August 20, 2018 that describes heart disease mortality rate among US adults (35+) by state and county. The data used in analyses are available in the “Data” file on the github page and the primary datafile used in analysis is called “heart_disease_stratify.csv”. Additional variables of interest were also downloaded from website and combine together with the original dataset.</p>
+<p>• Scrape and Clean: There are total 59076 rows and 19 variables in the original dataset. It describes the mortality rate across each county in year 2015. First, we removed 8 columns that basically give no useful information for analysis such as “data_source”, “class”, “topic”, “stratification1”, etc. Second, since we are looking for a more general result in a larger geographically scale, we create a new dataset that calculate the total and summarize the mean mortality rate in each state called “heart_disease.csv”. Then we added 5 other variables that might affect the mortality rate. For air quality and tobacco consumption, we take the sum value for each state. For obesity and stroke data, we take the mean percentage for each state. For income, we take the median for each state. Then we create a new dataset called “final_data.csv” by joining the new variables with the mortality rate across each state.</p>
+<p>• Exploratory analysis: For each variable, we make a scatterplot that can compare the mortality rate trend with the corresponding variable across each state. Then we make a simple linear regression to determine whether the variable has significant correlation with the mortality rate. # 1 Air quality From the scatterplot, we can see that the points are spread randomly. However, the relationship between pm2.5 and mortality rate is unclear. For the states, with low pm2.5, some of them have low mortality rate and some of them have high mortality rate. After we fit the simple regression model, the p-value for pm2.5 is 0.836, so it is a non-significant variable. # 2 Stroke From the linear regression, we find that p-value is less than 2e-16, indicates there is very significant association between stroke and heart disease mortality. From the plot, we can see that with higher stroke value, the heart disease mortality rate goes higher. # 3 Income From the plot, the fitted line is downward implying that the state with highst median income tend to have the lowest mortality rate. From the lm result, we can observe that median_income is a very significant variable with a p value of 1.3e-08. This indicates there is a strong association between income and heart disease mortality rate. # 4 Tabacco consumption From the plot, the fitted line fails to catch most of the points and points are spread randomly, so at this point we cannot make any conclusion. From the simple linear regression model, the p-value is 0.028 &lt; 0.05, indicating that there is strong correlation between tabacco comsumption and heart disease. # 5 Obesity From the plot, the fitted line is upward indicating that as the obesity percentage goes higher, the mortality rate would increase correspondingly.</p>
+<p>• Additional analysis: Because gender and race are categorical variable, so we want to measure the interaction between these two. Further more, we make a multi linear regression model that only include the significant variable that we discussed above.</p>
+<p>• Discussion:</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

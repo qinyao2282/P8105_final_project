@@ -17,15 +17,15 @@ This project was aimed to make analysis towards the potential geographical and d
 * Our main dataset [Heart Disease Mortality Data Among US Adults (35+) by State/Territory and County](https://catalog.data.gov/dataset/heart-disease-mortality-data-among-us-adults-35-by-state-territory-and-county-5fb7c) is first published by Centers for Disease Control and Prevention. This dataset was created on May19, 2017, and recently updated on August20, 2018. We download the CSV file to make further analysis. 
 * The potential factors we think may contribute to the mortality rate of heart disease are:
  
-*[Tobacco Consumption](https://catalog.data.gov/dataset/behavioral-risk-factor-data-tobacco-use-2011-to-present-e0ad1), dataset published by Centers for Disease Control and Prevention on October14, 2016
+* [Tobacco Consumption](https://catalog.data.gov/dataset/behavioral-risk-factor-data-tobacco-use-2011-to-present-e0ad1), dataset published by Centers for Disease Control and Prevention on October14, 2016
 
-*[Income](https://www.census.gov/topics/income-poverty/income/data/tables.html), dataset published by United States Census Bureau on 2017.
+* [Income](https://www.census.gov/topics/income-poverty/income/data/tables.html), dataset published by United States Census Bureau on 2017.
 
-*[Obesity](https://catalog.data.gov/dataset/national-obesity-by-state-b181b), dataset published by Lake County, Illinois on Novermber17, 2018.
+* [Obesity](https://catalog.data.gov/dataset/national-obesity-by-state-b181b), dataset published by Lake County, Illinois on Novermber17, 2018.
 
-*[Air Quality](https://catalog.data.gov/dataset/air-quality-measures-on-the-national-environmental-health-tracking-network), dataset published by Centers for Disease Control and Prevention on December16, 2015
+* [Air Quality](https://catalog.data.gov/dataset/air-quality-measures-on-the-national-environmental-health-tracking-network), dataset published by Centers for Disease Control and Prevention on December16, 2015
 
-*[Stroke Mortality](https://catalog.data.gov/dataset/stroke-mortality-data-among-us-adults-35-by-state-territory-and-county-50ff2), dataset published by Centers for Disease Control and Prevention on October8, 2016
+* [Stroke Mortality](https://catalog.data.gov/dataset/stroke-mortality-data-among-us-adults-35-by-state-territory-and-county-50ff2), dataset published by Centers for Disease Control and Prevention on October8, 2016
 
 
 ### Explore Our Analysis in Detail 
@@ -37,7 +37,7 @@ This project was aimed to make analysis towards the potential geographical and d
 
 * Click here to view our [MLR Analysis](mlr_analysis.html)
 
-* Our fantastic [shiny]
+* [shiny](https://sy2825.shinyapps.io/p8105_final_project)
 
 ### Conclusions and Public Implications
 
