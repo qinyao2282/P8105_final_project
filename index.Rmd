@@ -1,15 +1,14 @@
 ---
-title: "My Personal Website!"
+title: "Factors of Heart Disease Mortality Rate"
 
 output:
   html_document:
     toc: true
     toc_float: true 
 ---
-
 ### Summary Of This Project 
 
-This project was aimed to make analysis towards the potential geographical and demographical factors that may contribute to the mortality of heart disease. 
+This project was aimed to make analysis towards the potential geographical and demographical factors that may contribute to the mortality of heart disease.
 
 <img src="image/love.jpg" style="width:75%">
 
