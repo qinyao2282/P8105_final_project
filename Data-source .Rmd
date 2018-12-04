@@ -408,10 +408,7 @@ p
 
 ```
 
-<<<<<<< HEAD
-=======
 
->>>>>>> c475301a166973784837b08d7ffe823d8bc773ca
 ```{r}
 final_data = final_data %>%
   janitor::clean_names()
