@@ -22,8 +22,7 @@ library(maps)
 
 
 library(maps)
-
-
+library(gsheet)
 
 ```
 
@@ -32,9 +31,12 @@ Read original data
 ```{r input_heart_disease_data}
 
 
+
+
 library(gsheet)
 
 heart_disease_stratify = gsheet2tbl('docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing') %>%
+
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
   rename(mortality_rate = data_value) %>%
@@ -99,14 +101,9 @@ stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_Stat
 Add income
 
 ```{r}
-
-
-income_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1_Rd_dxRgMqOCaFC-8fWz6QODG8_IBZl1DnQOFaRxF0Q/edit?usp=sharing') %>% 
-  rename(state = "X1", us = "X2", median_income = "X3", income_standard_error = "X4" )
-
-income_data = income_data[3:53,]
-
-
+income_data = read_excel("data/income_2015.xlsx", range = "A4:D55") %>%
+  janitor::clean_names() %>%
+  rename(state = united_states, median_income = x55117, income_standard_error = x253) 
 data_with_income = left_join(heart_disease,income_data, by = "state")
 ```
 
@@ -117,11 +114,11 @@ data_with_income = left_join(heart_disease,income_data, by = "state")
 data_income_obesity = left_join(income_data,data_with_obesity, by = "state")
 
 
-smoking_data = read_csv("data/smoking.csv") %>% 
-  filter(YEAR == "2015-2016") %>% 
+smoking_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1ZU7uuqV-EZM81hE4kq0nFiPJHUMJj82fnXVllGFHJ00/edit?usp=sharing') %>% 
   mutate(year = 2015) %>% 
   rename(state = LocationDesc) %>% 
-  select(-YEAR) %>% 
+  select(-YEAR) %>%
+  filter(!is.na(Data_Value)) %>%
 
   select(year, state, Data_Value) %>% 
 
@@ -408,6 +405,9 @@ p
 
 
 ```
+
+
+
 
 
 ```{r}
