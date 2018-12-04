@@ -18,10 +18,10 @@ library(readxl)
 library(plotly)
 library(maps)
 
-
+library(gsheet)
 library(maps)
 
-new_heart_gender_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+new_heart_gender_data=gsheet2tbl('docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
   rename(mortality_rate = data_value) %>%
@@ -32,7 +32,7 @@ new_heart_gender_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adult
   filter(race=="Overall")%>%
   select(state,location_desc, mortality_rate,gender)
 
-new_stroke_gender_data=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+new_stroke_gender_data=gsheet2tbl('docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
   rename(stroke_value = data_value) %>%
@@ -48,7 +48,7 @@ new_gender_data=left_join(new_heart_gender_data,new_stroke_gender_data)%>%
 
   
 
-new_heart_race_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+new_heart_race_data=gsheet2tbl('docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
   rename(mortality_rate = data_value) %>%
@@ -59,7 +59,7 @@ new_heart_race_data=read_csv("data/Heart_Disease_Mortality_Data_Among_US_Adults_
   filter(!(race=="Overall"))%>%
   select(state, location_desc, mortality_rate, race)
 
-new_stroke_race_data=read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+new_stroke_race_data=gsheet2tbl('docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   rename(state = location_abbr) %>%
   rename(stroke_value = data_value) %>%

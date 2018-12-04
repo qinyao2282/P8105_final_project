@@ -2,7 +2,7 @@
 title: "Data_source"
 author: "Haowei Ni"
 date: "2018/11/19"
-output: github_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -60,9 +60,11 @@ heart_disease %>%
 
 Add air quality data 
 
-```{r} 
-library(gsheet)
-airquality_2015 = gsheet2tbl('https://docs.google.com/spreadsheets/d/1CRJzMI0QbqU34BZZQ1bg3BnZPM_oUfVUCVPOo4AnoB0/edit?usp=sharing') %>% 
+
+
+```{r}
+airquality_2015 =
+  gsheet2tbl('https://docs.google.com/spreadsheets/d/1CRJzMI0QbqU34BZZQ1bg3BnZPM_oUfVUCVPOo4AnoB0/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   select(state, pm2_5) %>%   
   group_by(state) %>% 
@@ -73,7 +75,7 @@ airquality_2015 = gsheet2tbl('https://docs.google.com/spreadsheets/d/1CRJzMI0Qbq
 Add obesity data
 
 ```{r add_obesity_data}
-obesity_data = read_csv("data/National_Obesity_By_State.csv") %>%
+obesity_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1zlB2cOOMvD-IJIiGQ6YOyQ6QEXEKVAkrPTzxZrYci28/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   rename(state = name) %>%
   rename(obesity_percentage = obesity) %>%
@@ -114,7 +116,10 @@ data_with_income = left_join(heart_disease,income_data, by = "state")
 data_income_obesity = left_join(income_data,data_with_obesity, by = "state")
 
 
-smoking_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1ZU7uuqV-EZM81hE4kq0nFiPJHUMJj82fnXVllGFHJ00/edit?usp=sharing') %>% 
+
+smoking_data = gsheet2tbl("https://docs.google.com/spreadsheets/d/1ZU7uuqV-EZM81hE4kq0nFiPJHUMJj82fnXVllGFHJ00/edit?usp=sharing") %>% 
+  filter(YEAR == "2015-2016") %>% 
+
   mutate(year = 2015) %>% 
   rename(state = LocationDesc) %>% 
   select(-YEAR) %>%
@@ -148,16 +153,12 @@ final_data_export = left_join(stroke_data, data_income_obesity_smoking_air, by =
 ```
 
 
-```{r}
-
-write.csv(final_data_export, file = "data/final_data.csv")
-```
-
 
 Find the association between smoke and heart disease mortality
 ```{r}
-final_data = read_csv("data/final_data.csv")
-  final_data %>%
+final_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1ifmyU22AaB81PvMDCCRrsIqtifa0FuKhH5MpI_FU0Sc/edit?usp=sharing')
+ 
+ final_data %>%
   mutate(state = forcats::fct_reorder(factor(state), tobacco_consumption)) %>%
   ggplot(aes(x = mortality_rate, y = tobacco_consumption)) + 
   geom_point(aes(color = state), alpha = .5) +
