@@ -1,0 +1,29 @@
+---
+title: "My Personal Website!"
+
+output:
+  html_document:
+    toc: true
+    toc_float: true 
+---
+
+### Summary Of This Project 
+
+This project was aimed to make analysis towards the potential geographical and demographical factors that may contribute to the mortality of heart disease. 
+
+<img src="image/love.jpg" style="width:75%">
+
+
+
+### Explore Our Project in Detail 
+
+Click here to view our [Data Source](Data-source_.html)
+
+Click here to view our [Dashboard](dashboard_template.html)
+
+Click here to view our [MLR Analysis](mlr_analysis.html)
+
+Our fantastic [shiny]
+
+
+
