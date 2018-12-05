@@ -19,10 +19,7 @@ library(readxl)
 
 library(plotly)
 library(maps)
-library("htmltools")
 
-
-library(maps)
 library(gsheet)
 
 ```
@@ -87,7 +84,7 @@ data_with_obesity = left_join(heart_disease, obesity_data)
 Add stroke data
 
 ```{r add_stroke_data}
-stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_State_Territory_and_County.csv") %>%
+stroke_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing') %>%
   janitor::clean_names() %>%
   rename(stroke_value=data_value)%>%
   rename(state = location_abbr) %>%
@@ -104,9 +101,12 @@ stroke_data = read_csv("data/Stroke_Mortality_Data_Among_US_Adults__35___by_Stat
 Add income
 
 ```{r}
-income_data = read_excel("data/income_2015.xlsx", range = "A4:D55") %>%
-  janitor::clean_names() %>%
-  rename(state = united_states, median_income = x55117, income_standard_error = x253) 
+income_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1_Rd_dxRgMqOCaFC-8fWz6QODG8_IBZl1DnQOFaRxF0Q/edit?usp=sharing') %>% 
+  rename(state = "X1", us = "X2", median_income = "X3", income_standard_error = "X4" )
+
+income_data = income_data[3:53,]
+
+
 data_with_income = left_join(heart_disease,income_data, by = "state")
 ```
 
@@ -398,9 +398,9 @@ p <- plot_geo(a, locationmode = 'USA-states') %>%
     z = ~mortality_rate, text = ~text_label, locations = ~us,
     color = ~mortality_rate, colors = 'Purples'
   ) %>%
-  colorbar(title = "Millions USD") %>%
+  colorbar(title = "Heart Disease Mortality") %>%
   layout(
-    title = '2011 US Agriculture Exports by State<br>(Hover for breakdown)',
+    title = '2016 Heart Disease Mortality Distribution',
     geo = g
   )
 p
