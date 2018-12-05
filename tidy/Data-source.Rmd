@@ -19,7 +19,8 @@ library(readxl)
 
 library(plotly)
 library(maps)
-
+library("htmltools")
+library("vembedr")
 
 library(maps)
 library(gsheet)
@@ -362,9 +363,9 @@ ggplot(new_race_data, aes(x=mortality_rate,y=stroke_value))+
 
 
 ```
-* From the interaction, we find that the p-value of "stroke_value : gender" is very small, indicate "gender" modifies the relationship between geart disease mortality and stroke mortality. With the plot, we can find that males have higher heart disease mortality rate, but the stroke mortality rate is similar.
+* From the interaction, we find that the p-value of "stroke_value : gender" is very small, indicate "gender" modifies the relationship between heart disease mortality and stroke mortality. With the plot, we can find that males have higher heart disease mortality rate, but the stroke mortality rate is similar.
 * From the linear regression model, we find that the Black has the highest heart disease mortality rate, and the Hispanic the least.
-???????
+
 
 ###Map
 
