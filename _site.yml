@@ -4,7 +4,7 @@ navbar:
   title: "Home"
   right:
     - text: "Report"
-      href: report.html
+      href: Report.html
     - text: "MLR Analysis"
       href: mlr_analysis.html
     - text: "FlexDashboard"

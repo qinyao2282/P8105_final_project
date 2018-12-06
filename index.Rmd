@@ -29,7 +29,6 @@ This project was aimed to make analysis towards the potential geographical and d
 
 * [Stroke Mortality](https://catalog.data.gov/dataset/stroke-mortality-data-among-us-adults-35-by-state-territory-and-county-50ff2), dataset published by Centers for Disease Control and Prevention on October8, 2016
 
-
 ### Explore Our Analysis in Detail 
 * Watch our [video](https://youtu.be/kt9lWp2Risc) for screencast of our analysis
 
