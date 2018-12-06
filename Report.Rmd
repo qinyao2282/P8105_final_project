@@ -472,6 +472,11 @@ ggplot(total_lm, aes(x = .fitted, y = .resid)) + geom_point() +
 The linear model is heart disease mortality = 266 + -0.0027 x median income + 8.4 x obesity percentage. 
 This result indicates that Obesity level contributes a lot to the occurence of heart disease mortality. 
 
+## •	Dashboard and Shiny Dashiboard:
+
+We used a dashboard and shinydashboard to demonstrate and compare the association between different factors and heart disease mortality. The shiny Dashboard shows the density of the disease motality and we can use that to comapre with the density of other factors. For example, we observed that the density of obesity is much higher in the mdidle west part of the country, which has a high coincidence with the density of heart disease mortality. And this also helps to prove that obesity is a very significant factor for cause of disease in heart disease. The code for shiny can be found in tidy/shiny.Rmd. 
+
+
 ##•	Discussion: 
 We found that obesity and income level has huge contribution to the heart-disease mortality rate. There is negative relationship between income level and mortality rate. And postive relationship between obesity percentage and mortality rate. However, smoking status, airquality and stroke don't have linear relationship with heart disease mortality rate. It is unexpected because we think poor airquality and heavy smoking would increase the mortality rate. In the further analysis, we can try non-linear models.    
 
