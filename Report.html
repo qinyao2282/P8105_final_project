@@ -225,39 +225,6 @@ $(document).ready(function () {
 </div>
 
 
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────── tidyverse 1.2.1 ──</code></pre>
-<pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
-## ✔ tibble  1.4.2     ✔ dplyr   0.7.8
-## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
-## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(dplyr)
-library(stringr)
-library(readr)
-library(readxl)
-
-library(plotly)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;plotly&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
-## 
-##     last_plot</code></pre>
-<pre><code>## The following object is masked from &#39;package:stats&#39;:
-## 
-##     filter</code></pre>
-<pre><code>## The following object is masked from &#39;package:graphics&#39;:
-## 
-##     layout</code></pre>
-<pre class="r"><code>library(maps)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;maps&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:purrr&#39;:
-## 
-##     map</code></pre>
-<pre class="r"><code>library(gsheet)</code></pre>
 <p>Group project report</p>
 <p>Member: Haowei Ni, Qinyao Wu, Jiabei Wang, Shuo Yan, Bihui Sun</p>
 <div id="motivation" class="section level2">
@@ -275,8 +242,10 @@ library(plotly)</code></pre>
 <div id="data" class="section level2">
 <h2>• Data:</h2>
 <p>The data were obtained when searching for the key world “heart disease mortality rate” on the website <a href="https://www.data.gov/" class="uri">https://www.data.gov/</a> This website is an open data source in US that covered various topics including “Health”, which we take most interest in. Data was updated on August 20, 2018 that describes heart disease mortality rate among US adults (35+) by state and county.</p>
-<p>First we download the original dataset we download from data.gov and stored in our google sheet.</p>
-<pre class="r"><code>heart_disease_stratify = gsheet2tbl(&#39;docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing&#39;) %&gt;%
+<p>First we import the original dataset that we have downloaded from data.gov and stored in our google sheet.</p>
+<pre class="r"><code>heart_disease_link = &quot;https://docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing&quot;
+
+heart_disease_stratify = gsheet2tbl(heart_disease_link) %&gt;%
 
   janitor::clean_names() %&gt;%
   rename(state = location_abbr) %&gt;%
@@ -297,14 +266,18 @@ heart_disease %&gt;%
   summarise(mortality_rate = mean(mortality_rate))</code></pre>
 <p>Then we add more variables from additional resources.</p>
 <p>•1. Add air quality data and tidy the dataset.</p>
-<pre class="r"><code>airquality_2015 =
-  gsheet2tbl(&#39;https://docs.google.com/spreadsheets/d/1CRJzMI0QbqU34BZZQ1bg3BnZPM_oUfVUCVPOo4AnoB0/edit?usp=sharing&#39;) %&gt;%
+<pre class="r"><code>airquality_link = &quot;https://docs.google.com/spreadsheets/d/1CRJzMI0QbqU34BZZQ1bg3BnZPM_oUfVUCVPOo4AnoB0/edit?usp=sharing&quot;
+
+airquality_2015 =
+  gsheet2tbl(airquality_link) %&gt;%
   janitor::clean_names() %&gt;%
   select(state, pm2_5) %&gt;%   
   group_by(state) %&gt;% 
   summarize(pm2.5 = sum(pm2_5))</code></pre>
 <p>•2. Add obesity data and tidy the dataset.</p>
-<pre class="r"><code>obesity_data = gsheet2tbl(&#39;https://docs.google.com/spreadsheets/d/1zlB2cOOMvD-IJIiGQ6YOyQ6QEXEKVAkrPTzxZrYci28/edit?usp=sharing&#39;) %&gt;%
+<pre class="r"><code>obesity_data_link = &quot;https://docs.google.com/spreadsheets/d/1zlB2cOOMvD-IJIiGQ6YOyQ6QEXEKVAkrPTzxZrYci28/edit?usp=sharing&quot;
+
+obesity_data = gsheet2tbl(obesity_data_link) %&gt;%
   janitor::clean_names() %&gt;%
   rename(state = name) %&gt;%
   rename(obesity_percentage = obesity) %&gt;%
@@ -312,18 +285,22 @@ heart_disease %&gt;%
 data_with_obesity = left_join(heart_disease, obesity_data)</code></pre>
 <pre><code>## Joining, by = &quot;state&quot;</code></pre>
 <p>•3. Add stroke data and tidy the dataset.</p>
-<pre class="r"><code>stroke_data = gsheet2tbl(&#39;https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing&#39;) %&gt;%
+<pre class="r"><code>stroke_data_link = &quot;https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing&quot;
+
+stroke_data = gsheet2tbl(stroke_data_link) %&gt;%
   janitor::clean_names() %&gt;%
-  rename(stroke_value=data_value)%&gt;%
+  rename(stroke_value = data_value) %&gt;%
   rename(state = location_abbr) %&gt;%
-  mutate(state = state.name[match(state, state.abb)])%&gt;%
+  mutate(state = state.name[match(state, state.abb)]) %&gt;%
 
   select(state,stroke_value) %&gt;% 
   group_by(state) %&gt;% 
   filter(!is.na(stroke_value)) %&gt;% 
   summarize(stroke_value = sum(stroke_value)) </code></pre>
 <p>•4. Add income data and tidy the dataset.</p>
-<pre class="r"><code>income_data = gsheet2tbl(&#39;https://docs.google.com/spreadsheets/d/1_Rd_dxRgMqOCaFC-8fWz6QODG8_IBZl1DnQOFaRxF0Q/edit?usp=sharing&#39;) %&gt;% 
+<pre class="r"><code>income_data_link = &quot;https://docs.google.com/spreadsheets/d/1_Rd_dxRgMqOCaFC-8fWz6QODG8_IBZl1DnQOFaRxF0Q/edit?usp=sharing&quot;
+
+income_data = gsheet2tbl(income_data_link) %&gt;% 
   rename(state = &quot;X1&quot;, us = &quot;X2&quot;, median_income = &quot;X3&quot;, income_standard_error = &quot;X4&quot; )</code></pre>
 <pre><code>## Warning: Missing column names filled in: &#39;X1&#39; [1], &#39;X2&#39; [2], &#39;X3&#39; [3],
 ## &#39;X4&#39; [4]</code></pre>
@@ -334,7 +311,9 @@ data_with_income = left_join(heart_disease,income_data, by = &quot;state&quot;)
 
 data_income_obesity = left_join(income_data,data_with_obesity, by = &quot;state&quot;)</code></pre>
 <p>•5. Add smoking data and tidy the dataset.</p>
-<pre class="r"><code>smoking_data = gsheet2tbl(&quot;https://docs.google.com/spreadsheets/d/1ZU7uuqV-EZM81hE4kq0nFiPJHUMJj82fnXVllGFHJ00/edit?usp=sharing&quot;) %&gt;% 
+<pre class="r"><code>smoking_data_link = &quot;https://docs.google.com/spreadsheets/d/1ZU7uuqV-EZM81hE4kq0nFiPJHUMJj82fnXVllGFHJ00/edit?usp=sharing&quot;
+
+smoking_data = gsheet2tbl(smoking_data_link) %&gt;% 
   filter(YEAR == &quot;2015-2016&quot;) %&gt;% 
 
   mutate(year = 2015) %&gt;% 
@@ -361,12 +340,14 @@ data_income_obesity_smoking_air = left_join(airquality_2015, data_income_obesity
 <p>Here is our final data.</p>
 <pre class="r"><code>final_data_export = left_join(stroke_data, data_income_obesity_smoking_air, by = &quot;state&quot;) 
 
-final_data = gsheet2tbl(&#39;https://docs.google.com/spreadsheets/d/1ifmyU22AaB81PvMDCCRrsIqtifa0FuKhH5MpI_FU0Sc/edit?usp=sharing&#39;)</code></pre>
+final_data_link = &quot;https://docs.google.com/spreadsheets/d/1ifmyU22AaB81PvMDCCRrsIqtifa0FuKhH5MpI_FU0Sc/edit?usp=sharing&quot;
+
+final_data = gsheet2tbl(final_data_link)</code></pre>
 <pre><code>## Warning: Missing column names filled in: &#39;X1&#39; [1]</code></pre>
 </div>
 <div id="scrape-and-clean" class="section level2">
 <h2>• Scrape and Clean:</h2>
-<p>There are total 59076 rows and 19 variables in the original dataset. It describes the mortality rate across each county in year 2015. First, we removed 8 columns that basically give no useful information for analysis such as “data_source”, “class”, “topic”, “stratification1”, etc. Second, since we are looking for a more general result in a larger geographically scale, we create a new dataset that calculate the total and summarize the mean mortality rate in each state called “heart_disease.csv”. Then we added 5 other variables that might affect the mortality rate. For air quality and tobacco consumption, we take the sum value for each state. For obesity and stroke data, we take the mean percentage for each state. For income, we take the median for each state. Then we create a new dataset called “final_data.csv” by joining the new variables with the mortality rate across each state.</p>
+<p>There are total 59076 rows and 19 variables in the original dataset. It describes the mortality rate across each county in year 2015. First, we removed 8 columns that basically give no useful information for analysis such as “data_source”, “class”, “topic”, “stratification1”, etc. Second, since we are looking for a more general result in a larger geographically scale, we create a new dataset that calculate the total and summarize the mean mortality rate in each state called “heart_disease.csv”. Then we added 5 other variables that might affect the mortality rate. For air quality, tobacco consumption, and stroke data, we take the sum value for each state. For obesity data, we take the mean percentage for each state.For income, we take the median for each state. Then we create a new dataset called “final_data.csv” by joining the new variables with the mortality rate across each state.</p>
 </div>
 <div id="exploratory-analysis" class="section level2">
 <h2>• Exploratory analysis:</h2>
@@ -375,21 +356,19 @@ final_data = gsheet2tbl(&#39;https://docs.google.com/spreadsheets/d/1ifmyU22AaB8
 <h4>1. Air quality</h4>
 <pre class="r"><code>final_data %&gt;% 
   mutate(state = fct_reorder(state, mortality_rate)) %&gt;% 
-  ggplot(aes(x = mortality_rate, y = pm2.5, color = state)) + 
+  ggplot(aes(x = pm2.5, y = mortality_rate, color = state)) + 
   geom_point() +
-  ggtitle(&quot;Airquality VS Mortality Rate &quot;) +
+  ggtitle(&quot;Heart Disease Mortality VS Airquality&quot;) +
   stat_smooth(method = &quot;lm&quot;, col = &quot;red&quot;) +
-  theme(legend.position = &quot;bottom&quot;,
-        legend.direction = &quot;horizontal&quot;,
-        axis.text.x = element_text(angle = 90, size = 6),
-        legend.key.size = unit(0.05, &quot;cm&quot;)) + 
-  labs(x = &quot;Mortality Rate&quot;,
-       y = &quot;PM2.5&quot;) </code></pre>
-<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_smooth).</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+   theme(text = element_text(size = 8), 
+        legend.position = &quot;bottom&quot;,
+        plot.title = element_text(hjust = 0.5)) + 
+  labs(x = &quot;PM2.5 value&quot;,
+       y = &quot;Mortality Rate&quot;) </code></pre>
+<p><img src="Report_files/figure-html/airquality_explore-1.png" width="672" /></p>
 <pre class="r"><code>## fit simple linear regression model 
-lm(final_data$mortality_rate~final_data$pm2.5) %&gt;% 
+
+lm(final_data$mortality_rate ~ final_data$pm2.5) %&gt;% 
   broom::tidy() %&gt;% 
   knitr::kable()</code></pre>
 <table>
@@ -419,188 +398,26 @@ lm(final_data$mortality_rate~final_data$pm2.5) %&gt;%
 </tr>
 </tbody>
 </table>
-<p>From the scatterplot, we can see that the points are spread randomly. However, the relationship between pm2.5 and mortality rate is unclear. For the states, with low pm2.5, some of them have low mortality rate and some of them have high mortality rate. After we fit the simple regression model, the p-value for pm2.5 is 0.836, so it is a non-significant variable.</p>
-</div>
-<div id="stroke" class="section level4">
-<h4>2. Stroke</h4>
-<pre class="r"><code>mydata1=heart_disease_stratify %&gt;%
-  filter(stratification1 == &quot;Overall&quot;, stratification2 == &quot;Overall&quot;) %&gt;%
-  select(state, location_desc, mortality_rate) %&gt;%
-  filter(!is.na(mortality_rate))
-  
-mydata2 = gsheet2tbl(&#39;https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing&#39;) %&gt;%
-  janitor::clean_names() %&gt;%
-  rename(state = location_abbr) %&gt;%
-  rename(stroke_value = data_value) %&gt;%
-  mutate(state = state.name[match(state, state.abb)]) %&gt;%
-  filter(stratification1 == &quot;Overall&quot;, stratification2 == &quot;Overall&quot;) %&gt;%
-  select(state, location_desc, stroke_value) %&gt;%
-  filter(!is.na(stroke_value))
-                                                                                                                    
-comdata = left_join(mydata1,mydata2)  </code></pre>
-<pre><code>## Joining, by = c(&quot;state&quot;, &quot;location_desc&quot;)</code></pre>
-<pre class="r"><code>final_data %&gt;%
-  mutate(state = forcats::fct_reorder(state,stroke_value)) %&gt;%
-  ggplot(aes(x = mortality_rate, y = stroke_value)) + 
-  geom_point(aes(color = state), alpha = .5)</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<pre class="r"><code>comdata %&gt;%
-  mutate(state = forcats::fct_reorder(state,stroke_value)) %&gt;%
-  ggplot(aes(x = mortality_rate, y = stroke_value)) + 
-  geom_point(aes(color = state), alpha = .5)</code></pre>
-<pre><code>## Warning: Removed 2 rows containing missing values (geom_point).</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
-<pre class="r"><code>lm(mortality_rate~stroke_value,data = comdata) %&gt;% 
-  broom::tidy() %&gt;% 
-  knitr::kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">term</th>
-<th align="right">estimate</th>
-<th align="right">std.error</th>
-<th align="right">statistic</th>
-<th align="right">p.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">(Intercept)</td>
-<td align="right">143.236305</td>
-<td align="right">5.9886300</td>
-<td align="right">23.91804</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">stroke_value</td>
-<td align="right">2.746495</td>
-<td align="right">0.0752517</td>
-<td align="right">36.49744</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-<p>From the linear regression, we find that p-value is less than 2e-16, indicates there is very significant association between stroke and heart disease mortality. From the plot, we can see that with higher stroke value, the heart disease mortality rate goes higher.</p>
-</div>
-<div id="income" class="section level4">
-<h4>3. Income</h4>
-<pre class="r"><code>final_data_income = 
-  final_data %&gt;% 
-  mutate(state = forcats::fct_reorder(factor(state), median_income)) 
-
-final_data_income %&gt;% 
-  ggplot(aes(x = mortality_rate, y = median_income, color = state)) +
-  geom_point() +
-  stat_smooth(method = &quot;lm&quot;, col = &quot;red&quot;) +
-  theme(text = element_text(size = 8), axis.text.x = element_text(angle = 60, hjust = 1), legend.position = &quot;bottom&quot;) + 
-
-  #Add the title and the name for x and y axis. 
-  labs(
-    title = &quot;Association between Income and Heart Disease Mortality Rate&quot;,
-    x = &quot;Mortality Rate&quot;,
-    y = &quot;median_income&quot;
-  )</code></pre>
-<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_smooth).</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<pre class="r"><code>lm(mortality_rate ~ median_income, data = final_data_income) %&gt;% 
-  broom::tidy() %&gt;% 
-  knitr::kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">term</th>
-<th align="right">estimate</th>
-<th align="right">std.error</th>
-<th align="right">statistic</th>
-<th align="right">p.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">(Intercept)</td>
-<td align="right">610.2373902</td>
-<td align="right">39.9405637</td>
-<td align="right">15.278637</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">median_income</td>
-<td align="right">-0.0048261</td>
-<td align="right">0.0007058</td>
-<td align="right">-6.838044</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-<p>From the plot, the fitted line is downward implying that the state with highst median income tend to have the lowest mortality rate. From the lm result, we can observe that median_income is a very significant variable with a p value of 1.3e-08. This indicates there is a strong association between income and heart disease mortality rate.</p>
-</div>
-<div id="tabacco-consumption" class="section level4">
-<h4>4 Tabacco consumption</h4>
-<pre class="r"><code> final_data %&gt;%
-  mutate(state = forcats::fct_reorder(factor(state), tobacco_consumption)) %&gt;%
-  ggplot(aes(x = mortality_rate, y = tobacco_consumption)) + 
-  geom_point(aes(color = state), alpha = .5) +
-  stat_smooth(method = &quot;lm&quot;, col = &quot;red&quot;) +
-  labs(
-    title = &quot;Tabacco Consumption Accross states&quot;
-  ) +
-  theme(text = element_text(size = 8), axis.text = element_text(angle = 60, hjust = 1), legend.position = &quot;bottom&quot;)</code></pre>
-<pre><code>## Warning: Removed 14 rows containing non-finite values (stat_smooth).</code></pre>
-<pre><code>## Warning: Removed 14 rows containing missing values (geom_point).</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<pre class="r"><code>lm(mortality_rate~tobacco_consumption, data = final_data) %&gt;%
-  broom::tidy() %&gt;% 
-  knitr::kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">term</th>
-<th align="right">estimate</th>
-<th align="right">std.error</th>
-<th align="right">statistic</th>
-<th align="right">p.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">(Intercept)</td>
-<td align="right">241.8405899</td>
-<td align="right">45.2029014</td>
-<td align="right">5.350112</td>
-<td align="right">0.0000056</td>
-</tr>
-<tr class="even">
-<td align="left">tobacco_consumption</td>
-<td align="right">0.8384022</td>
-<td align="right">0.3669033</td>
-<td align="right">2.285077</td>
-<td align="right">0.0284808</td>
-</tr>
-</tbody>
-</table>
-<p>From the plot, the fitted line fails to catch most of the points and points are spread randomly, so at this point we cannot make any conclusion. From the simple linear regression model, the p-value is 0.028 &lt; 0.05, indicating that there is strong correlation between tabacco comsumption and heart disease.</p>
+<p>From the scatterplot we can see that the points are spread randomly. However, the relationship between pm2.5 and mortality rate is unclear. For the states, with low pm2.5, some of them have low mortality rate and some of them have high mortality rate. After we fit the simple regression model, the p-value for pm2.5 is 0.836, so it is a non-significant variable.</p>
 </div>
 <div id="obesity" class="section level4">
-<h4>5. Obesity</h4>
+<h4>2. Obesity</h4>
 <pre class="r"><code>final_data %&gt;%
   ggplot(aes(x = obesity_percentage, y = mortality_rate)) + 
   geom_point(aes(color = state), alpha = .5) +
   stat_smooth(method = &quot;lm&quot;, col = &quot;red&quot;) +
   labs(
     x = &quot;Obesity(%)&quot;,
-    y = &quot;Mortality&quot;,
+    y = &quot;Mortality Rate&quot;,
     title = &quot;Heart Disease Mortality vs Obesity&quot;
   ) +
   theme(text = element_text(size = 8), 
-        axis.text = element_text(angle = 60, hjust = 1), 
         legend.position = &quot;bottom&quot;,
         plot.title = element_text(hjust = 0.5))</code></pre>
-<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_smooth).</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<pre class="r"><code>  lm(mortality_rate ~ obesity_percentage, data = final_data) %&gt;%
+<p><img src="Report_files/figure-html/obesity_explore-1.png" width="672" /></p>
+<pre class="r"><code>## fit simple linear regression model 
+  
+  lm(mortality_rate ~ obesity_percentage, data = final_data) %&gt;%
     broom::tidy() %&gt;% 
     knitr::kable()</code></pre>
 <table>
@@ -630,7 +447,159 @@ final_data_income %&gt;%
 </tr>
 </tbody>
 </table>
-<p>From the plot, the fitted line is upward indicating that as the obesity percentage goes higher, the mortality rate would increase correspondingly.</p>
+<p>From the plot we can observe that the fitted line is upward indicating that as the obesity percentage goes higher, the mortality rate would increase correspondingly. As we can see, the p-value is extremely small which means there is a strong association between obesity and heart disease mortality.</p>
+</div>
+<div id="stroke" class="section level4">
+<h4>3. Stroke</h4>
+<pre class="r"><code>final_data %&gt;%
+  ggplot(aes(x = stroke_value, y = mortality_rate)) + 
+  geom_point(aes(color = state), alpha = .5) +
+  stat_smooth(method = &quot;lm&quot;, col = &quot;red&quot;) +
+  labs(
+    x = &quot;Stroke Value&quot;,
+    y = &quot;Mortality Rate&quot;,
+    title = &quot;Heart Disease Mortality Rate vs Stroke Value&quot;
+  ) +
+   theme(text = element_text(size = 8), 
+        legend.position = &quot;bottom&quot;,
+        plot.title = element_text(hjust = 0.5))</code></pre>
+<p><img src="Report_files/figure-html/stroke_explore-1.png" width="672" /></p>
+<pre class="r"><code>## fit simple linear regression model 
+  
+  lm(mortality_rate ~ stroke_value, data = final_data) %&gt;%
+    broom::tidy() %&gt;% 
+    knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">303.9956221</td>
+<td align="right">11.7692525</td>
+<td align="right">25.829646</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">stroke_value</td>
+<td align="right">0.0008308</td>
+<td align="right">0.0002043</td>
+<td align="right">4.066454</td>
+<td align="right">0.0001766</td>
+</tr>
+</tbody>
+</table>
+<p>From the linear regression, we find that p-value is less than 0.00018, indicates there is very significant association between stroke and heart disease mortality. From the plot, we can see that with higher stroke value, the heart disease mortality rate goes higher.</p>
+</div>
+<div id="income" class="section level4">
+<h4>4. Income</h4>
+<pre class="r"><code>final_data_income = 
+  final_data %&gt;% 
+  mutate(state = forcats::fct_reorder(factor(state), median_income)) 
+
+final_data_income %&gt;% 
+  ggplot(aes(x = median_income, y = mortality_rate, color = state)) +
+  geom_point() +
+  stat_smooth(method = &quot;lm&quot;, col = &quot;red&quot;) +
+   theme(text = element_text(size = 8), 
+        legend.position = &quot;bottom&quot;,
+        plot.title = element_text(hjust = 0.5)) +
+  labs(
+    title = &quot;Heart Disease Mortality Rate vs Median Income&quot;,
+    x = &quot;Median Income&quot;,
+    y = &quot;Mortality Rate&quot;
+  )</code></pre>
+<p><img src="Report_files/figure-html/income_explore-1.png" width="672" /></p>
+<pre class="r"><code>## fit simple linear regression model 
+
+lm(mortality_rate ~ median_income, data = final_data_income) %&gt;% 
+  broom::tidy() %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">610.2373902</td>
+<td align="right">39.9405637</td>
+<td align="right">15.278637</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">median_income</td>
+<td align="right">-0.0048261</td>
+<td align="right">0.0007058</td>
+<td align="right">-6.838044</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p>From the plot we can see the fitted line is downward implying that the state with highst median income tend to have the lowest mortality rate. From the lm result, we can observe that median income is a very significant variable with a p-value of 1.3e-08. This indicates that there is a strong association between income and heart disease mortality rate.</p>
+</div>
+<div id="tabacco-consumption" class="section level4">
+<h4>5 Tabacco consumption</h4>
+<pre class="r"><code> final_data %&gt;%
+  mutate(state = forcats::fct_reorder(factor(state), tobacco_consumption)) %&gt;%
+  ggplot(aes(x = tobacco_consumption, y = mortality_rate )) + 
+  geom_point(aes(color = state), alpha = .5) +
+  stat_smooth(method = &quot;lm&quot;, col = &quot;red&quot;) +
+  labs(
+    x = &quot;Tobacco Consumption Value&quot;,
+    y = &quot;Mortality Rate&quot;,
+    title = &quot;Heart Disease Mortality Rate VS Tobacco Consumption Value&quot;
+  ) +
+   theme(text = element_text(size = 8), 
+        legend.position = &quot;bottom&quot;,
+        plot.title = element_text(hjust = 0.5))</code></pre>
+<p><img src="Report_files/figure-html/tabacco_consumption_explore-1.png" width="672" /></p>
+<pre class="r"><code>## fit simple linear regression model 
+ 
+lm(mortality_rate ~ tobacco_consumption, data = final_data) %&gt;%
+  broom::tidy() %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">241.8405899</td>
+<td align="right">45.2029014</td>
+<td align="right">5.350112</td>
+<td align="right">0.0000056</td>
+</tr>
+<tr class="even">
+<td align="left">tobacco_consumption</td>
+<td align="right">0.8384022</td>
+<td align="right">0.3669033</td>
+<td align="right">2.285077</td>
+<td align="right">0.0284808</td>
+</tr>
+</tbody>
+</table>
+<p>From the plot we can seethe fitted line fails to catch most of the points and points are spread randomly, so at this point we cannot make any conclusion. From the simple linear regression model, we can know the p-value is 0.028 &lt; 0.05 which indicates that there is strong correlation between tabacco comsumption and heart disease.</p>
 </div>
 </div>
 <div id="additional-analysis" class="section level2">
@@ -638,7 +607,7 @@ final_data_income %&gt;%
 <p>Because gender and race are categorical variable, so we want to measure the interaction between these two. Gender and race will affect the relationship between stroke and mortality rate.</p>
 <div id="gender-v.s.-stroke" class="section level4">
 <h4>1. Gender v.s. Stroke</h4>
-<pre class="r"><code>new_heart_gender_data = gsheet2tbl(&#39;docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing&#39;) %&gt;%
+<pre class="r"><code>new_heart_gender_data = gsheet2tbl(heart_disease_link) %&gt;%
   janitor::clean_names() %&gt;%
   rename(state = location_abbr) %&gt;%
   rename(mortality_rate = data_value) %&gt;%
@@ -649,7 +618,7 @@ final_data_income %&gt;%
   filter(race == &quot;Overall&quot;) %&gt;%
   select(state,location_desc, mortality_rate,gender)
 
-new_stroke_gender_data = gsheet2tbl(&#39;https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing&#39;) %&gt;%
+new_stroke_gender_data = gsheet2tbl(stroke_data_link) %&gt;%
   janitor::clean_names() %&gt;%
   rename(state = location_abbr) %&gt;%
   rename(stroke_value = data_value) %&gt;%
@@ -660,9 +629,9 @@ new_stroke_gender_data = gsheet2tbl(&#39;https://docs.google.com/spreadsheets/d/
   filter(race == &quot;Overall&quot;) %&gt;%
   select(state, location_desc, stroke_value,gender)
 new_gender_data = left_join(new_heart_gender_data,new_stroke_gender_data) %&gt;%
-  filter(!is.na(stroke_value))</code></pre>
-<pre><code>## Joining, by = c(&quot;state&quot;, &quot;location_desc&quot;, &quot;gender&quot;)</code></pre>
-<pre class="r"><code>lm(mortality_rate~stroke_value+gender+stroke_value*gender,data = new_gender_data) %&gt;% 
+  filter(!is.na(stroke_value))
+
+lm(mortality_rate~stroke_value+gender+stroke_value*gender,data = new_gender_data) %&gt;% 
   broom::tidy() %&gt;% 
   knitr::kable()</code></pre>
 <table>
@@ -706,13 +675,22 @@ new_gender_data = left_join(new_heart_gender_data,new_stroke_gender_data) %&gt;%
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>ggplot(new_gender_data,aes(x = mortality_rate,y = stroke_value)) +
-  geom_point(aes(color = gender), alpha = .5)</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(new_gender_data,aes(x = stroke_value, y = mortality_rate)) +
+  geom_point(aes(color = gender), alpha = .5) +
+  labs(
+    x = &quot;Stroke Value&quot;,
+    y = &quot;Mortality Rate&quot;,
+    title = &quot;Heart Disease Mortality Rate VS Stroke Value for Different Genders&quot;
+  ) +
+   theme(text = element_text(size = 8), 
+        legend.position = &quot;bottom&quot;,
+        plot.title = element_text(hjust = 0.5))</code></pre>
+<p><img src="Report_files/figure-html/gender_vs_stroke-1.png" width="672" /></p>
+<p>From the linear regression we can see that gender is an effect modifier that influences the relationship between heart disease mortality and stroke mortality. The plot shows that male and female have similar stroke mortality, but male have obviously higher heart disease mortality rate.</p>
 </div>
 <div id="race-v.s.-stroke" class="section level4">
 <h4>2. Race v.s. Stroke</h4>
-<pre class="r"><code>new_heart_race_data = gsheet2tbl(&#39;docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing&#39;) %&gt;%
+<pre class="r"><code>new_heart_race_data = gsheet2tbl(heart_disease_link) %&gt;%
   janitor::clean_names() %&gt;%
   rename(state = location_abbr) %&gt;%
   rename(mortality_rate = data_value) %&gt;%
@@ -723,7 +701,7 @@ new_gender_data = left_join(new_heart_gender_data,new_stroke_gender_data) %&gt;%
   filter(!(race == &quot;Overall&quot;)) %&gt;%
   select(state, location_desc, mortality_rate, race)
 
-new_stroke_race_data = gsheet2tbl(&#39;https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing&#39;) %&gt;%
+new_stroke_race_data = gsheet2tbl(stroke_data_link) %&gt;%
   janitor::clean_names() %&gt;%
   rename(state = location_abbr) %&gt;%
   rename(stroke_value = data_value) %&gt;%
@@ -733,10 +711,12 @@ new_stroke_race_data = gsheet2tbl(&#39;https://docs.google.com/spreadsheets/d/1A
   filter(gender == &quot;Overall&quot;) %&gt;%
   filter(!(race == &quot;Overall&quot;)) %&gt;%
   select(state, location_desc, stroke_value,race)
-new_race_data=left_join(new_heart_race_data,new_stroke_race_data) %&gt;%
-  filter(!is.na(stroke_value))</code></pre>
-<pre><code>## Joining, by = c(&quot;state&quot;, &quot;location_desc&quot;, &quot;race&quot;)</code></pre>
-<pre class="r"><code>lm(mortality_rate~stroke_value + race+stroke_value*race,data = new_race_data) %&gt;% 
+new_race_data = left_join(new_heart_race_data,new_stroke_race_data) %&gt;%
+  filter(!is.na(stroke_value))
+
+
+
+lm(mortality_rate~stroke_value + race+stroke_value*race,data = new_race_data) %&gt;% 
   broom::tidy() %&gt;% 
   knitr::kable()</code></pre>
 <table>
@@ -822,18 +802,25 @@ new_race_data=left_join(new_heart_race_data,new_stroke_race_data) %&gt;%
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>ggplot(new_race_data, aes(x = mortality_rate,y=stroke_value))+
-  geom_point(aes(color = race))</code></pre>
-<pre><code>## Warning: Removed 13 rows containing missing values (geom_point).</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(new_race_data, aes(x = stroke_value, y = mortality_rate)) +
+  geom_point(aes(color = race)) +
+  labs(
+    x = &quot;Stroke Value&quot;,
+    y = &quot;Mortality Rate&quot;,
+    title = &quot;Heart Disease Mortality Rate VS Stroke Value for Different Races&quot;
+  ) +
+   theme(text = element_text(size = 8), 
+        legend.position = &quot;bottom&quot;,
+        plot.title = element_text(hjust = 0.5))</code></pre>
+<p><img src="Report_files/figure-html/race_vs_stroke-1.png" width="672" /></p>
+<p>From the linear regression, we can see that reaces(except the White) modify the relationship between heart disease mortality and stroke mortality. Black people have highest heart disease mortality rate while Hispanic has the least.</p>
 </div>
 <div id="mlr" class="section level4">
 <h4>3. MLR</h4>
-<p>Further more, we make a multi linear regression model that only include the significant variable that we discussed above.</p>
-<pre class="r"><code>final_data = final_data %&gt;%
-  janitor::clean_names()
+<p>Further more, we make a multi-linear regression model that only includes the significant variables that we have discussed above.</p>
+<pre class="r"><code>final_data = final_data
 
-lm(mortality_rate ~ tobacco_consumption + median_income + obesity_percentage + pm2_5 + stroke_value, data = final_data) %&gt;%
+lm(mortality_rate ~ tobacco_consumption + median_income + obesity_percentage + pm2.5 + stroke_value, data = final_data) %&gt;%
     broom::tidy() %&gt;% 
     knitr::kable()</code></pre>
 <table>
@@ -876,7 +863,7 @@ lm(mortality_rate ~ tobacco_consumption + median_income + obesity_percentage + p
 <td align="right">0.0086549</td>
 </tr>
 <tr class="odd">
-<td align="left">pm2_5</td>
+<td align="left">pm2.5</td>
 <td align="right">-0.0040359</td>
 <td align="right">0.0039113</td>
 <td align="right">-1.031861</td>
@@ -891,7 +878,7 @@ lm(mortality_rate ~ tobacco_consumption + median_income + obesity_percentage + p
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>total_lm = lm(mortality_rate ~ tobacco_consumption + median_income + obesity_percentage + pm2_5 + stroke_value, data = final_data) %&gt;%
+<pre class="r"><code>total_lm = lm(mortality_rate ~ tobacco_consumption + median_income + obesity_percentage + pm2.5 + stroke_value, data = final_data) %&gt;%
   fortify()
 
 
@@ -903,13 +890,58 @@ ggplot(total_lm, aes(x = .fitted, y = .resid)) + geom_point() +
     title = &quot;Residuals vs Fitted&quot;
   ) +
   theme(plot.title = element_text(hjust = 0.5))</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="Report_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>The linear model is heart disease mortality = 266 + -0.0027 x median income + 8.4 x obesity percentage. This result indicates that Obesity level contributes a lot to the occurence of heart disease mortality.</p>
 </div>
 </div>
 <div id="discussion" class="section level2">
 <h2>• Discussion:</h2>
 <p>We found that obesity and income level has huge contribution to the heart-disease mortality rate. There is negative relationship between income level and mortality rate. And postive relationship between obesity percentage and mortality rate. However, smoking status, airquality and stroke don’t have linear relationship with heart disease mortality rate. It is unexpected because we think poor airquality and heavy smoking would increase the mortality rate. In the further analysis, we can try non-linear models.</p>
+</div>
+<div id="links-to-access-the-data" class="section level2">
+<h2>• Links to access the data</h2>
+<div id="heart-disease-data" class="section level3">
+<h3>* Heart disease data:</h3>
+<div id="httpsdocs.google.comspreadsheetsd1w-xvhloezj37wrzdx-dp_svouzkg5vmtpfdmolwbyr4edituspsharing" class="section level4">
+<h4><a href="https://docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing</a></h4>
+</div>
+</div>
+<div id="air-quality-data" class="section level3">
+<h3>* Air Quality data:</h3>
+<div id="httpsdocs.google.comspreadsheetsd1crjzmi0qbqu34bzzq1bg3bnzpm_oufvucvpoo4anob0edituspsharing" class="section level4">
+<h4><a href="https://docs.google.com/spreadsheets/d/1CRJzMI0QbqU34BZZQ1bg3BnZPM_oUfVUCVPOo4AnoB0/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1CRJzMI0QbqU34BZZQ1bg3BnZPM_oUfVUCVPOo4AnoB0/edit?usp=sharing</a></h4>
+</div>
+</div>
+<div id="obesity-data" class="section level3">
+<h3>* Obesity data:</h3>
+<div id="httpsdocs.google.comspreadsheetsd1zlb2coomvd-ijiigq6yoyq6qexekvakrptzxzryci28edituspsharing" class="section level4">
+<h4><a href="https://docs.google.com/spreadsheets/d/1zlB2cOOMvD-IJIiGQ6YOyQ6QEXEKVAkrPTzxZrYci28/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1zlB2cOOMvD-IJIiGQ6YOyQ6QEXEKVAkrPTzxZrYci28/edit?usp=sharing</a></h4>
+</div>
+</div>
+<div id="stroke-data" class="section level3">
+<h3>* Stroke data:</h3>
+<div id="httpsdocs.google.comspreadsheetsd1azkdl8snrtdnex3fhp1mewnknj9rnxakambpvgndv5sedituspsharing" class="section level4">
+<h4><a href="https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing</a></h4>
+</div>
+</div>
+<div id="income-data" class="section level3">
+<h3>* Income data:</h3>
+<div id="httpsdocs.google.comspreadsheetsd1_rd_dxrgmqocafc-8fwz6qodg8_ibzl1dnqofarxf0qedituspsharing" class="section level4">
+<h4><a href="https://docs.google.com/spreadsheets/d/1_Rd_dxRgMqOCaFC-8fWz6QODG8_IBZl1DnQOFaRxF0Q/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1_Rd_dxRgMqOCaFC-8fWz6QODG8_IBZl1DnQOFaRxF0Q/edit?usp=sharing</a></h4>
+</div>
+</div>
+<div id="smoking-data" class="section level3">
+<h3>* Smoking data:</h3>
+<div id="httpsdocs.google.comspreadsheetsd1zu7uuqv-ezm81he4kq0nfipjhumjj82fnxvllgfhj00edituspsharing" class="section level4">
+<h4><a href="https://docs.google.com/spreadsheets/d/1ZU7uuqV-EZM81hE4kq0nFiPJHUMJj82fnXVllGFHJ00/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1ZU7uuqV-EZM81hE4kq0nFiPJHUMJj82fnXVllGFHJ00/edit?usp=sharing</a></h4>
+</div>
+</div>
+<div id="final-data" class="section level3">
+<h3>* Final data:</h3>
+<div id="httpsdocs.google.comspreadsheetsd1ifmyu22aab81pvmdccrrsiqtifa0fukhh5mpi_fu0scedituspsharing" class="section level4">
+<h4><a href="https://docs.google.com/spreadsheets/d/1ifmyU22AaB81PvMDCCRrsIqtifa0FuKhH5MpI_FU0Sc/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1ifmyU22AaB81PvMDCCRrsIqtifa0FuKhH5MpI_FU0Sc/edit?usp=sharing</a></h4>
+</div>
+</div>
 </div>
 
 
