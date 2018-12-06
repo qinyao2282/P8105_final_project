@@ -170,7 +170,8 @@ final_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1ifmyU22AaB81PvM
   theme(text = element_text(size = 8), axis.text = element_text(angle = 60, hjust = 1), legend.position = "bottom")
  
 lm(mortality_rate~tobacco_consumption, data = final_data) %>%
-summary()
+  broom::tidy() %>% 
+  knitr::kable()
   
 ```
 

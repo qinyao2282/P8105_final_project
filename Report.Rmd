@@ -6,6 +6,16 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+library(stringr)
+library(readr)
+library(readxl)
+
+library(plotly)
+library(maps)
+
+library(gsheet)
 ```
 
 Group project report
@@ -28,7 +38,66 @@ The data were obtained when searching for the key world “heart disease mortali
 There are total 59076 rows and 19 variables in the original dataset. It describes the mortality rate across each county in year 2015. First, we removed 8 columns that basically give no useful information for analysis such as “data_source”, “class”, “topic”, “stratification1”, etc. Second, since we are looking for a more general result in a larger geographically scale, we create a new dataset that calculate the total and summarize the mean mortality rate in each state called “heart_disease.csv”. Then we added 5 other variables that might affect the mortality rate. For air quality and tobacco consumption, we take the sum value for each state. For obesity and stroke data, we take the mean percentage for each state. For income, we take the median for each state. Then we create a new dataset called “final_data.csv” by joining the new variables with the mortality rate across each state. 
 
 ##•	Exploratory analysis: 
-For each variable, we make a scatterplot that can compare the mortality rate trend with the corresponding variable across each state. Then we make a simple linear regression to determine whether the variable has significant correlation with the mortality rate. # 1 Air quality From the scatterplot, we can see that the points are spread randomly. However, the relationship between pm2.5 and mortality rate is unclear. For the states, with low pm2.5, some of them have low mortality rate and some of them have high mortality rate. After we fit the simple regression model, the p-value for pm2.5 is 0.836, so it is a non-significant variable. # 2 Stroke From the linear regression, we find that p-value is less than 2e-16, indicates there is very significant association between stroke and heart disease mortality. From the plot, we can see that with higher stroke value, the heart disease mortality rate goes higher. # 3 Income From the plot, the fitted line is downward implying that the state with highst median income tend to have the lowest mortality rate. From the lm result, we can observe that median_income is a very significant variable with a p value of 1.3e-08. This indicates there is a strong association between income and heart disease mortality rate. # 4 Tabacco consumption From the plot, the fitted line fails to catch most of the points and points are spread randomly, so at this point we cannot make any conclusion. From the simple linear regression model, the p-value is 0.028 < 0.05, indicating that there is strong correlation between tabacco comsumption and heart disease. # 5 Obesity From the plot, the fitted line is upward indicating that as the obesity percentage goes higher, the mortality rate would increase correspondingly. 
+For each variable, we make a scatterplot that can compare the mortality rate trend with the corresponding variable across each state. Then we make a simple linear regression to determine whether the variable has significant correlation with the mortality rate. 
+
+
+```{r}
+#Read the final data
+
+final_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1ifmyU22AaB81PvMDCCRrsIqtifa0FuKhH5MpI_FU0Sc/edit?usp=sharing')
+```
+
+
+#### 1. Air quality 
+ 
+```{r}
+final_data %>% 
+  mutate(state = fct_reorder(state, mortality_rate)) %>% 
+  ggplot(aes(x = mortality_rate, y = pm2.5, color = state)) + 
+  geom_point() +
+  ggtitle("Airquality VS Mortality Rate ") +
+  stat_smooth(method = "lm", col = "red") +
+  theme(legend.position = "bottom",
+        legend.direction = "horizontal",
+        axis.text.x = element_text(angle = 90, size = 6),
+        legend.key.size = unit(0.05, "cm")) + 
+  labs(x = "Mortality Rate",
+       y = "PM2.5") 
+## fit simple linear regression model 
+air_regression<-lm(final_data$mortality_rate~final_data$pm2.5) 
+summary(air_regression)
+```
+ 
+ 
+ From the scatterplot, we can see that the points are spread randomly. However, the relationship between pm2.5 and mortality rate is unclear. For the states, with low pm2.5, some of them have low mortality rate and some of them have high mortality rate. After we fit the simple regression model, the p-value for pm2.5 is 0.836, so it is a non-significant variable. # 2 Stroke From the linear regression, we find that p-value is less than 2e-16, indicates there is very significant association between stroke and heart disease mortality. From the plot, we can see that with higher stroke value, the heart disease mortality rate goes higher. # 3 Income From the plot, the fitted line is downward implying that the state with highst median income tend to have the lowest mortality rate. From the lm result, we can observe that median_income is a very significant variable with a p value of 1.3e-08. This indicates there is a strong association between income and heart disease mortality rate. 
+
+
+
+####4 Tabacco consumption 
+ 
+ 
+```{r}
+ 
+ final_data %>%
+  mutate(state = forcats::fct_reorder(factor(state), tobacco_consumption)) %>%
+  ggplot(aes(x = mortality_rate, y = tobacco_consumption)) + 
+  geom_point(aes(color = state), alpha = .5) +
+  stat_smooth(method = "lm", col = "red") +
+  labs(
+    title = "Tabacco Consumption Accross states"
+  ) +
+  theme(text = element_text(size = 8), axis.text = element_text(angle = 60, hjust = 1), legend.position = "bottom")
+ 
+lm(mortality_rate~tobacco_consumption, data = final_data) %>%
+  broom::tidy() %>% 
+  knitr::kable()
+  
+```
+ 
+ From the plot, the fitted line fails to catch most of the points and points are spread randomly, so at this point we cannot make any conclusion. From the simple linear regression model, the p-value is 0.028 < 0.05, indicating that there is strong correlation between tabacco comsumption and heart disease. 
+ 
+ 
+ # 5 Obesity From the plot, the fitted line is upward indicating that as the obesity percentage goes higher, the mortality rate would increase correspondingly. 
 
 ##•	Additional analysis: 
 Because gender and race are categorical variable, so we want to measure the interaction between these two. Gender and race will affect the relationship between stroke and mortality rate. Further more, we make a multi linear regression model that only include the significant variable that we discussed above. The linear model is heart disease mortality = 266 + -0.0027 x median income + 8.4 x obesity percentage. 
