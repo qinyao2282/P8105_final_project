@@ -4,8 +4,7 @@ date: "2018/12/3"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
 library(tidyverse)
 library(dplyr)
 library(stringr)
@@ -16,36 +15,168 @@ library(plotly)
 library(maps)
 
 library(gsheet)
+
 ```
 
 Group project report
 
 Member: Haowei Ni, Qinyao Wu, Jiabei Wang, Shuo Yan, Bihui Sun 
 
-##• Motivation: 
+##• Motivation:
+
 The goal of this project is to analysis the factor that might contribute to the mortality rate of heart disease both demographically and geographically. The motivation is that as a public health student, it is our responsibility to learn about the diseases that keep threatening our lives and take early action for prevention. We believe that explore the factors that might related to the mortality rate of heart disease might be the next step that people take to assess possible treatment options. 
 
-##•	Related work: 
+##•	Related work:
+
 Heart disease is the leading cause of death for both men and women. About 610,000 people die of heart disease in the United States every year–that’s 1 in every 4 deaths. It is also the leading cause of death in most ethnicities groups, including white, African American, Asian and Hispanic. 
 
 ##•	Initial questions: 
+
 What was the geographic distribution of mortality rate? Does the mortality rate has difference between the state that are in coastal area or inland area? Does the rate affect by the longitude or latitude? Which ethnic group has the highest morality rate? Does men have higher mortality rate than women? Are there any interactions between these two factors. After adding other variables that might affect the mortality rate, we came up with a new question. Can we make a logistic model for heart disease mortality rate based on the variables that have significant correlation? 
 
 ##•	Data: 
-The data were obtained when searching for the key world “heart disease mortality rate” on the website https://www.data.gov/ This website is an open data source in US that covered various topics including “Health”, which we take most interest in. Data was updated on August 20, 2018 that describes heart disease mortality rate among US adults (35+) by state and county. The data used in this project are uploaded to google drive and can be accessed by using the "gsheet" package to access the google sheet document.  Additional variables of interest were also downloaded from website and combine together with the original dataset. 
+
+The data were obtained when searching for the key world “heart disease mortality rate” on the website https://www.data.gov/ This website is an open data source in US that covered various topics including “Health”, which we take most interest in. Data was updated on August 20, 2018 that describes heart disease mortality rate among US adults (35+) by state and county. 
+
+First we download the original dataset we download from data.gov and stored in our google sheet.  
+
+```{r}
+
+heart_disease_stratify = gsheet2tbl('docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing') %>%
+
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(mortality_rate = data_value) %>%
+
+  mutate(state = state.name[match(state, state.abb)]) %>% 
+  select(-data_source, -geographic_level, -class, -topic, -data_value_footnote, -data_value_footnote_symbol, -topic_id, -location_id ) 
+
+heart_disease = heart_disease_stratify %>% 
+  filter(stratification1 == "Overall", stratification2 == "Overall") %>% 
+  select(-stratification1, -stratification2, -stratification_category1, -stratification_category2) 
+
+```
+
+
+Then we tidied the data set by grouping with states.
+
+```{r}
+heart_disease$mortality_rate[is.na(heart_disease$mortality_rate)] = 0
+
+heart_disease = 
+heart_disease %>% 
+  group_by(state) %>% 
+  summarise(mortality_rate = mean(mortality_rate))
+```
+
+Then we add more variables from additional resources. 
+
+•1. Add air quality data and tidy the dataset. 
+
+```{r airquality}
+airquality_2015 =
+  gsheet2tbl('https://docs.google.com/spreadsheets/d/1CRJzMI0QbqU34BZZQ1bg3BnZPM_oUfVUCVPOo4AnoB0/edit?usp=sharing') %>%
+  janitor::clean_names() %>%
+  select(state, pm2_5) %>%   
+  group_by(state) %>% 
+  summarize(pm2.5 = sum(pm2_5))
+
+```
+
+•2. Add obesity data and tidy the dataset. 
+
+```{r add_obesity_data}
+obesity_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1zlB2cOOMvD-IJIiGQ6YOyQ6QEXEKVAkrPTzxZrYci28/edit?usp=sharing') %>%
+  janitor::clean_names() %>%
+  rename(state = name) %>%
+  rename(obesity_percentage = obesity) %>%
+  select(state, obesity_percentage) 
+data_with_obesity = left_join(heart_disease, obesity_data)
+
+
+```
+
+•3. Add stroke data and tidy the dataset.
+
+```{r add_stroke_data}
+stroke_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing') %>%
+  janitor::clean_names() %>%
+  rename(stroke_value=data_value)%>%
+  rename(state = location_abbr) %>%
+  mutate(state = state.name[match(state, state.abb)])%>%
+
+  select(state,stroke_value) %>% 
+  group_by(state) %>% 
+  filter(!is.na(stroke_value)) %>% 
+  summarize(stroke_value = sum(stroke_value)) 
+```
+
+•4. Add income data and tidy the dataset.
+
+```{r income}
+income_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1_Rd_dxRgMqOCaFC-8fWz6QODG8_IBZl1DnQOFaRxF0Q/edit?usp=sharing') %>% 
+  rename(state = "X1", us = "X2", median_income = "X3", income_standard_error = "X4" )
+
+income_data = income_data[3:53,]
+
+
+data_with_income = left_join(heart_disease,income_data, by = "state")
+
+data_income_obesity = left_join(income_data,data_with_obesity, by = "state")
+
+```
+
+•5. Add smoking data and tidy the dataset.
+
+```{r smoking}
+
+smoking_data = gsheet2tbl("https://docs.google.com/spreadsheets/d/1ZU7uuqV-EZM81hE4kq0nFiPJHUMJj82fnXVllGFHJ00/edit?usp=sharing") %>% 
+  filter(YEAR == "2015-2016") %>% 
+
+  mutate(year = 2015) %>% 
+  rename(state = LocationDesc) %>% 
+  select(-YEAR) %>%
+  filter(!is.na(Data_Value)) %>%
+
+  select(year, state, Data_Value) %>% 
+
+  select(year, state, Data_Value) %>% 
+  rename(tobacco_comsumption = Data_Value) %>% 
+  group_by(state) %>% 
+  summarise(tobacco_consumption = sum(tobacco_comsumption))
+
+```
+
+
+Then we combine all the data with the original data set to generate our final data. 
+
+```{r combine}
+
+data_income_obesity_smoking = left_join(smoking_data, data_income_obesity, by = "state")
+
+data_income_obesity_smoking_air = left_join(airquality_2015, data_income_obesity_smoking, by = "state")
+
+
+
+
+data_income_obesity_smoking = left_join(smoking_data, data_income_obesity, by = "state")
+data_income_obesity_smoking_air = left_join(airquality_2015, data_income_obesity_smoking, by = "state")
+```
+
+Here is our final data. 
+
+```{r}
+final_data_export = left_join(stroke_data, data_income_obesity_smoking_air, by = "state") 
+
+final_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1ifmyU22AaB81PvMDCCRrsIqtifa0FuKhH5MpI_FU0Sc/edit?usp=sharing')
+```
+
 
 ##•	Scrape and Clean: 
 There are total 59076 rows and 19 variables in the original dataset. It describes the mortality rate across each county in year 2015. First, we removed 8 columns that basically give no useful information for analysis such as “data_source”, “class”, “topic”, “stratification1”, etc. Second, since we are looking for a more general result in a larger geographically scale, we create a new dataset that calculate the total and summarize the mean mortality rate in each state called “heart_disease.csv”. Then we added 5 other variables that might affect the mortality rate. For air quality and tobacco consumption, we take the sum value for each state. For obesity and stroke data, we take the mean percentage for each state. For income, we take the median for each state. Then we create a new dataset called “final_data.csv” by joining the new variables with the mortality rate across each state. 
 
 ##•	Exploratory analysis: 
 For each variable, we make a scatterplot that can compare the mortality rate trend with the corresponding variable across each state. Then we make a simple linear regression to determine whether the variable has significant correlation with the mortality rate. 
-
-
-```{r}
-#Read the final data
-
-final_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1ifmyU22AaB81PvMDCCRrsIqtifa0FuKhH5MpI_FU0Sc/edit?usp=sharing')
-```
 
 
 #### 1. Air quality 
@@ -63,13 +194,78 @@ final_data %>%
         legend.key.size = unit(0.05, "cm")) + 
   labs(x = "Mortality Rate",
        y = "PM2.5") 
+
 ## fit simple linear regression model 
-air_regression<-lm(final_data$mortality_rate~final_data$pm2.5) 
-summary(air_regression)
+lm(final_data$mortality_rate~final_data$pm2.5) %>% 
+  broom::tidy() %>% 
+  knitr::kable()
 ```
  
  
- From the scatterplot, we can see that the points are spread randomly. However, the relationship between pm2.5 and mortality rate is unclear. For the states, with low pm2.5, some of them have low mortality rate and some of them have high mortality rate. After we fit the simple regression model, the p-value for pm2.5 is 0.836, so it is a non-significant variable. # 2 Stroke From the linear regression, we find that p-value is less than 2e-16, indicates there is very significant association between stroke and heart disease mortality. From the plot, we can see that with higher stroke value, the heart disease mortality rate goes higher. # 3 Income From the plot, the fitted line is downward implying that the state with highst median income tend to have the lowest mortality rate. From the lm result, we can observe that median_income is a very significant variable with a p value of 1.3e-08. This indicates there is a strong association between income and heart disease mortality rate. 
+ From the scatterplot, we can see that the points are spread randomly. However, the relationship between pm2.5 and mortality rate is unclear. For the states, with low pm2.5, some of them have low mortality rate and some of them have high mortality rate. After we fit the simple regression model, the p-value for pm2.5 is 0.836, so it is a non-significant variable. 
+ 
+####2. Stroke 
+```{r}
+mydata1=heart_disease_stratify %>%
+  filter(stratification1 == "Overall", stratification2 == "Overall") %>%
+  select(state, location_desc, mortality_rate) %>%
+  filter(!is.na(mortality_rate))
+  
+mydata2 = gsheet2tbl('https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing') %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(stroke_value = data_value) %>%
+  mutate(state = state.name[match(state, state.abb)]) %>%
+  filter(stratification1 == "Overall", stratification2 == "Overall") %>%
+  select(state, location_desc, stroke_value) %>%
+  filter(!is.na(stroke_value))
+                                                                                                                    
+comdata = left_join(mydata1,mydata2)  
+
+final_data %>%
+  mutate(state = forcats::fct_reorder(state,stroke_value)) %>%
+  ggplot(aes(x = mortality_rate, y = stroke_value)) + 
+  geom_point(aes(color = state), alpha = .5)
+comdata %>%
+  mutate(state = forcats::fct_reorder(state,stroke_value)) %>%
+  ggplot(aes(x = mortality_rate, y = stroke_value)) + 
+  geom_point(aes(color = state), alpha = .5)
+
+lm(mortality_rate~stroke_value,data = comdata) %>% 
+  broom::tidy() %>% 
+  knitr::kable()
+```
+
+From the linear regression, we find that p-value is less than 2e-16, indicates there is very significant association between stroke and heart disease mortality. From the plot, we can see that with higher stroke value, the heart disease mortality rate goes higher. 
+
+#### 3. Income 
+
+```{r}
+final_data_income = 
+  final_data %>% 
+  mutate(state = forcats::fct_reorder(factor(state), median_income)) 
+
+final_data_income %>% 
+  ggplot(aes(x = mortality_rate, y = median_income, color = state)) +
+  geom_point() +
+  stat_smooth(method = "lm", col = "red") +
+  theme(text = element_text(size = 8), axis.text.x = element_text(angle = 60, hjust = 1), legend.position = "bottom") + 
+
+  #Add the title and the name for x and y axis. 
+  labs(
+    title = "Association between Income and Heart Disease Mortality Rate",
+    x = "Mortality Rate",
+    y = "median_income"
+  )
+
+
+lm(mortality_rate ~ median_income, data = final_data_income) %>% 
+  broom::tidy() %>% 
+  knitr::kable()
+```
+
+
+From the plot, the fitted line is downward implying that the state with highst median income tend to have the lowest mortality rate. From the lm result, we can observe that median_income is a very significant variable with a p value of 1.3e-08. This indicates there is a strong association between income and heart disease mortality rate. 
 
 
 
@@ -97,10 +293,143 @@ lm(mortality_rate~tobacco_consumption, data = final_data) %>%
  From the plot, the fitted line fails to catch most of the points and points are spread randomly, so at this point we cannot make any conclusion. From the simple linear regression model, the p-value is 0.028 < 0.05, indicating that there is strong correlation between tabacco comsumption and heart disease. 
  
  
- # 5 Obesity From the plot, the fitted line is upward indicating that as the obesity percentage goes higher, the mortality rate would increase correspondingly. 
+#### 5. Obesity 
+
+```{r}
+final_data %>%
+  ggplot(aes(x = obesity_percentage, y = mortality_rate)) + 
+  geom_point(aes(color = state), alpha = .5) +
+  stat_smooth(method = "lm", col = "red") +
+  labs(
+    x = "Obesity(%)",
+    y = "Mortality",
+    title = "Heart Disease Mortality vs Obesity"
+  ) +
+  theme(text = element_text(size = 8), 
+        axis.text = element_text(angle = 60, hjust = 1), 
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5))
+  
+  lm(mortality_rate ~ obesity_percentage, data = final_data) %>%
+    broom::tidy() %>% 
+    knitr::kable()
+    
+ 
+```
+
+
+From the plot, the fitted line is upward indicating that as the obesity percentage goes higher, the mortality rate would increase correspondingly. 
 
 ##•	Additional analysis: 
-Because gender and race are categorical variable, so we want to measure the interaction between these two. Gender and race will affect the relationship between stroke and mortality rate. Further more, we make a multi linear regression model that only include the significant variable that we discussed above. The linear model is heart disease mortality = 266 + -0.0027 x median income + 8.4 x obesity percentage. 
+Because gender and race are categorical variable, so we want to measure the interaction between these two. Gender and race will affect the relationship between stroke and mortality rate.
+
+
+####1. Gender v.s. Stroke
+```{r}
+new_heart_gender_data = gsheet2tbl('docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing') %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(mortality_rate = data_value) %>%
+  rename(gender = stratification1) %>%
+  rename(race =  stratification2) %>%
+  mutate(state = state.name[match(state, state.abb)]) %>%
+  filter(gender %in% c("Male","Female")) %>%
+  filter(race == "Overall") %>%
+  select(state,location_desc, mortality_rate,gender)
+
+new_stroke_gender_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing') %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(stroke_value = data_value) %>%
+  rename(gender = stratification1) %>%
+  rename(race = stratification2) %>%
+  mutate(state = state.name[match(state, state.abb)]) %>%
+  filter(gender %in% c("Male","Female")) %>%
+  filter(race == "Overall") %>%
+  select(state, location_desc, stroke_value,gender)
+new_gender_data = left_join(new_heart_gender_data,new_stroke_gender_data) %>%
+  filter(!is.na(stroke_value))
+
+lm(mortality_rate~stroke_value+gender+stroke_value*gender,data = new_gender_data) %>% 
+  broom::tidy() %>% 
+  knitr::kable()
+  
+
+
+
+ggplot(new_gender_data,aes(x = mortality_rate,y = stroke_value)) +
+  geom_point(aes(color = gender), alpha = .5)
+```
+
+####2. Race v.s. Stroke
+
+```{r}
+new_heart_race_data = gsheet2tbl('docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing') %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(mortality_rate = data_value) %>%
+  rename(gender = stratification1) %>%
+  rename(race = stratification2) %>%
+  mutate(state = state.name[match(state, state.abb)]) %>%
+  filter(gender == "Overall") %>%
+  filter(!(race == "Overall")) %>%
+  select(state, location_desc, mortality_rate, race)
+
+new_stroke_race_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing') %>%
+  janitor::clean_names() %>%
+  rename(state = location_abbr) %>%
+  rename(stroke_value = data_value) %>%
+  rename(gender = stratification1) %>%
+  rename(race = stratification2) %>%
+  mutate(state = state.name[match(state, state.abb)]) %>%
+  filter(gender == "Overall") %>%
+  filter(!(race == "Overall")) %>%
+  select(state, location_desc, stroke_value,race)
+new_race_data=left_join(new_heart_race_data,new_stroke_race_data) %>%
+  filter(!is.na(stroke_value))
+
+
+
+lm(mortality_rate~stroke_value + race+stroke_value*race,data = new_race_data) %>% 
+  broom::tidy() %>% 
+  knitr::kable()
+
+
+ggplot(new_race_data, aes(x = mortality_rate,y=stroke_value))+
+  geom_point(aes(color = race))
+
+
+```
+
+
+####3. MLR 
+Further more, we make a multi linear regression model that only include the significant variable that we discussed above. 
+
+```{r}
+final_data = final_data %>%
+  janitor::clean_names()
+
+lm(mortality_rate ~ tobacco_consumption + median_income + obesity_percentage + pm2_5 + stroke_value, data = final_data) %>%
+    broom::tidy() %>% 
+    knitr::kable()
+
+total_lm = lm(mortality_rate ~ tobacco_consumption + median_income + obesity_percentage + pm2_5 + stroke_value, data = final_data) %>%
+  fortify()
+
+
+ggplot(total_lm, aes(x = .fitted, y = .resid)) + geom_point() + 
+  stat_smooth(method = "lm", col = "red") +
+  labs(
+    x = "Fitted value",
+    y = "Residual",
+    title = "Residuals vs Fitted"
+  ) +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+
+
+The linear model is heart disease mortality = 266 + -0.0027 x median income + 8.4 x obesity percentage. 
 This result indicates that Obesity level contributes a lot to the occurence of heart disease mortality. 
 
 ##•	Discussion: 
