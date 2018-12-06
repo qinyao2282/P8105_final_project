@@ -126,6 +126,39 @@ $(document).ready(function () {
 </div>
 
 
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ─ Attaching packages ───────────────────── tidyverse 1.2.1 ─</code></pre>
+<pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
+## ✔ tibble  1.4.2     ✔ dplyr   0.7.8
+## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
+## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
+<pre><code>## ─ Conflicts ─────────────────────── tidyverse_conflicts() ─
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(dplyr)
+library(stringr)
+library(readr)
+library(readxl)
+
+library(plotly)</code></pre>
+<pre><code>## 
+## Attaching package: 'plotly'</code></pre>
+<pre><code>## The following object is masked from 'package:ggplot2':
+## 
+##     last_plot</code></pre>
+<pre><code>## The following object is masked from 'package:stats':
+## 
+##     filter</code></pre>
+<pre><code>## The following object is masked from 'package:graphics':
+## 
+##     layout</code></pre>
+<pre class="r"><code>library(maps)</code></pre>
+<pre><code>## 
+## Attaching package: 'maps'</code></pre>
+<pre><code>## The following object is masked from 'package:purrr':
+## 
+##     map</code></pre>
+<pre class="r"><code>library(gsheet)</code></pre>
 <p>Group project report</p>
 <p>Member: Haowei Ni, Qinyao Wu, Jiabei Wang, Shuo Yan, Bihui Sun</p>
 <div id="motivation" class="section level2">
@@ -143,6 +176,94 @@ $(document).ready(function () {
 <div id="data" class="section level2">
 <h2>• Data:</h2>
 <p>The data were obtained when searching for the key world “heart disease mortality rate” on the website <a href="https://www.data.gov/" class="uri">https://www.data.gov/</a> This website is an open data source in US that covered various topics including “Health”, which we take most interest in. Data was updated on August 20, 2018 that describes heart disease mortality rate among US adults (35+) by state and county. The data used in analyses are available in the “Data” file on the github page and the primary datafile used in analysis is called “heart_disease_stratify.csv”. Additional variables of interest were also downloaded from website and combine together with the original dataset.</p>
+<p>First we download the original dataset from data.gov</p>
+<pre class="r"><code>library(gsheet)
+
+heart_disease_stratify = gsheet2tbl('docs.google.com/spreadsheets/d/1W-xVHLoeZj37wrZdX-dP_SVouZKg5VmTpFdmOLWByR4/edit?usp=sharing') %&gt;%
+
+  janitor::clean_names() %&gt;%
+  rename(state = location_abbr) %&gt;%
+  rename(mortality_rate = data_value) %&gt;%
+
+  mutate(state = state.name[match(state, state.abb)]) %&gt;% 
+  select(-data_source, -geographic_level, -class, -topic, -data_value_footnote, -data_value_footnote_symbol, -topic_id, -location_id ) 
+
+heart_disease = heart_disease_stratify %&gt;% 
+  filter(stratification1 == &quot;Overall&quot;, stratification2 == &quot;Overall&quot;) %&gt;% 
+  select(-stratification1, -stratification2, -stratification_category1, -stratification_category2) 
+
+heart_disease$mortality_rate[is.na(heart_disease$mortality_rate)] = 0
+
+heart_disease = 
+heart_disease %&gt;% 
+  group_by(state) %&gt;% 
+  summarise(mortality_rate = mean(mortality_rate))</code></pre>
+<p>Then we add more variables from additional resources. Add air quality data</p>
+<pre class="r"><code>airquality_2015 =
+  gsheet2tbl('https://docs.google.com/spreadsheets/d/1CRJzMI0QbqU34BZZQ1bg3BnZPM_oUfVUCVPOo4AnoB0/edit?usp=sharing') %&gt;%
+  janitor::clean_names() %&gt;%
+  select(state, pm2_5) %&gt;%   
+  group_by(state) %&gt;% 
+  summarize(pm2.5 = sum(pm2_5))</code></pre>
+<p>Add obesity data</p>
+<pre class="r"><code>obesity_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1zlB2cOOMvD-IJIiGQ6YOyQ6QEXEKVAkrPTzxZrYci28/edit?usp=sharing') %&gt;%
+  janitor::clean_names() %&gt;%
+  rename(state = name) %&gt;%
+  rename(obesity_percentage = obesity) %&gt;%
+  select(state, obesity_percentage) 
+data_with_obesity = left_join(heart_disease, obesity_data)</code></pre>
+<pre><code>## Joining, by = &quot;state&quot;</code></pre>
+<p>Add stroke data</p>
+<pre class="r"><code>stroke_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1AZkDl8sNrTDnEX3Fhp1MeWNKNj9rnXaKaMbpVGndv5s/edit?usp=sharing') %&gt;%
+  janitor::clean_names() %&gt;%
+  rename(stroke_value=data_value)%&gt;%
+  rename(state = location_abbr) %&gt;%
+  mutate(state = state.name[match(state, state.abb)])%&gt;%
+
+  select(state,stroke_value) %&gt;% 
+  group_by(state) %&gt;% 
+  filter(!is.na(stroke_value)) %&gt;% 
+  summarize(stroke_value = sum(stroke_value)) </code></pre>
+<p>Add income</p>
+<pre class="r"><code>income_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1_Rd_dxRgMqOCaFC-8fWz6QODG8_IBZl1DnQOFaRxF0Q/edit?usp=sharing') %&gt;% 
+  rename(state = &quot;X1&quot;, us = &quot;X2&quot;, median_income = &quot;X3&quot;, income_standard_error = &quot;X4&quot; )</code></pre>
+<pre><code>## Warning: Missing column names filled in: 'X1' [1], 'X2' [2], 'X3' [3],
+## 'X4' [4]</code></pre>
+<pre class="r"><code>income_data = income_data[3:53,]
+
+
+data_with_income = left_join(heart_disease,income_data, by = &quot;state&quot;)</code></pre>
+<pre class="r"><code>data_income_obesity = left_join(income_data,data_with_obesity, by = &quot;state&quot;)
+
+
+
+smoking_data = gsheet2tbl(&quot;https://docs.google.com/spreadsheets/d/1ZU7uuqV-EZM81hE4kq0nFiPJHUMJj82fnXVllGFHJ00/edit?usp=sharing&quot;) %&gt;% 
+  filter(YEAR == &quot;2015-2016&quot;) %&gt;% 
+
+  mutate(year = 2015) %&gt;% 
+  rename(state = LocationDesc) %&gt;% 
+  select(-YEAR) %&gt;%
+  filter(!is.na(Data_Value)) %&gt;%
+
+  select(year, state, Data_Value) %&gt;% 
+
+  select(year, state, Data_Value) %&gt;% 
+  rename(tobacco_comsumption = Data_Value) %&gt;% 
+  group_by(state) %&gt;% 
+  summarise(tobacco_consumption = sum(tobacco_comsumption))
+
+
+data_income_obesity_smoking = left_join(smoking_data, data_income_obesity, by = &quot;state&quot;)
+
+data_income_obesity_smoking_air = left_join(airquality_2015, data_income_obesity_smoking, by = &quot;state&quot;)
+
+
+
+
+data_income_obesity_smoking = left_join(smoking_data, data_income_obesity, by = &quot;state&quot;)
+data_income_obesity_smoking_air = left_join(airquality_2015, data_income_obesity_smoking, by = &quot;state&quot;)</code></pre>
+<p>Lastly, we join the additional variables with the the tidy dataset.</p>
+<pre class="r"><code>final_data_export = left_join(stroke_data, data_income_obesity_smoking_air, by = &quot;state&quot;) </code></pre>
 </div>
 <div id="scrape-and-clean" class="section level2">
 <h2>• Scrape and Clean:</h2>
