@@ -108,7 +108,7 @@ final_data = gsheet2tbl('https://docs.google.com/spreadsheets/d/1ifmyU22AaB81PvM
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Fctors Might Causing Heart Disease
+### Factors Might Cause Heart Disease
 
 ```{r}
 final_data_mlr = final_data %>% 
